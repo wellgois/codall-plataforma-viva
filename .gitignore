@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+*.db
+*.sqlite
+__pycache__/
+.venv/
+target/
+logs/
+data/
+*.tfstate*
+.terraform/
+secrets*
