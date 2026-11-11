@@ -45,7 +45,7 @@ Airflow orquestra | Codall opera e audita | GitHub Actions publica
 | 0 | Base: capacidade medida, repositorio, CI | em andamento |
 | 1 | Lakehouse com Airflow (bronze, silver, gold) | planejada |
 | 2 | Confiabilidade publica: contratos, linhagem, postmortems | planejada |
-| 3 | Streaming com Redpanda | planejada |
+| 3 | Streaming com Redpanda | no ar (aceite de 11/11) |
 | 4 | Vitrine: curriculo verificavel e radar do mercado | planejada |
 | 5 | AWS com Terraform e teto de gasto; Power BI | planejada |
 | 6 | Lancamento | planejada |
