@@ -18,3 +18,4 @@ transformacao/logs/
 *.duckdb
 landing/
 infra/.env
+transformacao/.user.yml
