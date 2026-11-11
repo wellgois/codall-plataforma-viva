@@ -18,3 +18,10 @@ A conta AWS so sera aberta em janeiro, com teto de R$ 30 a R$ 50 por mes. A Fase
 
 ## Evidencia
 `infra/terraform/teste-local.sh`: fmt ok, validate ok, 2 ciclos apply (9 criados) e destroy (9 removidos), 0 falhas.
+
+## Atualizacao de 11/11 (conta AWS real)
+- `plan` na conta real: 11 recursos (os 9 do teste simulado mais o workgroup Athena e o orcamento).
+- `apply`: 11 criados sem erro. Athena e Budgets, antes so validados, funcionaram na conta real.
+- Gold publicado no S3 (2 arquivos Parquet) e consultado no Athena (limite de 100 MB por consulta ativo).
+- Ciclo destroy -> apply repetido 2 vezes: 11 destruidos e 11 criados em cada ciclo, 0 falhas.
+- A chave do usuario administrador do Terraform foi usada so neste teste e removida depois; o segredo nunca entrou no repositorio.
