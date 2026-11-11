@@ -10,6 +10,7 @@ cp $R/vitrine/radar.html $R/vitrine/curriculo.html $R/vitrine/index.html $T/
 python3 $R/confiabilidade/auditoria_privacidade.py $T || { echo "PUBLICACAO BLOQUEADA"; exit 1; }
 mkdir -p $P/plataforma
 cp $T/radar.json $P/plataforma/radar.json
+cp $R/vitrine/img/perfil.jpg $P/perfil.jpg
 cp $T/radar.html $P/radar.html
 cp $T/curriculo.html $P/curriculo.html
 cp $T/index.html $P/vitrine.html
