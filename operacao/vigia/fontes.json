@@ -1,6 +1,6 @@
 {
   "pm2_logs": "/root/.pm2/logs",
-  "ignorar_pm2": ["codall-supervisor", "claude-proxy"],
+  "ignorar_pm2": ["codall-supervisor", "claude-proxy", "erros-vigia"],
   "containers": {
     "ap_backend":      {"nome": "APIA (euprofessor)", "codigo": "/edu/euprofessor/ap-saas/backend/src", "reiniciar": "docker restart ap_backend", "deploy": "cd /edu/euprofessor/ap-saas && docker compose build backend && docker compose up -d backend"},
     "ap_frontend":     {"nome": "APIA (tela)",        "reiniciar": "docker restart ap_frontend"},
