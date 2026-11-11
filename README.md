@@ -1,60 +1,78 @@
 # Codall - Plataforma Viva em Dados
 
-Uma plataforma de dados pequena, barata e **em operacao de verdade**: um lakehouse alimentado todos os dias por cinco produtos que estao no ar, orquestrado com Airflow e operado por um agente de IA (Codall) sob auditoria.
+[![ci](https://github.com/wellgois/codall-plataforma-viva/actions/workflows/ci.yml/badge.svg)](https://github.com/wellgois/codall-plataforma-viva/actions/workflows/ci.yml)
+[![quickstart](https://github.com/wellgois/codall-plataforma-viva/actions/workflows/quickstart.yml/badge.svg)](https://github.com/wellgois/codall-plataforma-viva/actions/workflows/quickstart.yml)
 
-> Status: **Fase 0 - base** (iniciado em 10/11/2026). Este README descreve o que existe hoje e o que esta planejado. Nada aqui e marcado como pronto antes de passar no teste de aceite.
+*English: [README.en.md](README.en.md)*
 
-## Por que este projeto existe
+Uma plataforma de dados pequena, barata e **em operacao de verdade**: um lakehouse alimentado todos os dias por produtos que estao no ar, orquestrado com Airflow, transformado com dbt, com eventos em Redpanda, contratos de dados, monitor publico e um radar do mercado de dados brasileiro.
 
-A maioria dos portfolios de engenharia de dados usa datasets prontos. Aqui os dados vem de produtos reais, com usuarios reais: falhas reais, dado sujo real, custo real e LGPD real. O objetivo e mostrar o dia 2 de uma plataforma: agendamento, backfill, qualidade, linhagem, incidentes e custo.
+**Veja ao vivo:** [landing](https://codall.site) · [radar do mercado](https://codall.site/radar.html) · [confiabilidade](https://codall.site/confiabilidade.html) · [curriculo verificavel](https://codall.site/curriculo.html) · [demo em video](docs/media/demo.mp4)
 
-## Arquitetura (alvo)
+## Rode em 15 minutos
 
-```
-Fontes (5 produtos no ar)
-        |
-        v
-Ingestao: lote diario (extractors) + eventos (Redpanda, API Kafka)
-        |
-        v
-Lakehouse: bronze -> silver -> gold   (RustFS/S3 + Delta Lake, PySpark, dbt)
-        |
-        v
-Vitrine publica: confiabilidade, catalogo e linhagem, radar do mercado de dados
+Precisa so de Docker (Compose v2) e ~4 GB livres. Os dados sao sinteticos; nada de producao sai do autor.
 
-Airflow orquestra | Codall opera e audita | GitHub Actions publica
+```bash
+git clone https://github.com/wellgois/codall-plataforma-viva
+cd codall-plataforma-viva
+./quickstart.sh
 ```
 
-## Stack
+O script gera segredos aleatorios, sobe Postgres, S3 (RustFS) e Airflow, cria 30 dias de dados sinteticos, dispara a DAG (validar contratos, depois dbt build) e imprime o radar. O tempo em maquina limpa e medido a cada mudanca no [workflow quickstart](.github/workflows/quickstart.yml). Para desligar: `cd infra && docker compose down -v`.
+
+## Arquitetura
+
+```mermaid
+flowchart LR
+  P[Produtos no ar] -->|lote diario, somente leitura| E[Extratores]
+  P -->|eventos| R[Redpanda]
+  R --> C[Consumidor idempotente]
+  E --> L[(landing: Parquet)]
+  C --> L
+  L --> V[Validacao de contratos]
+  V --> D[dbt + DuckDB: bronze, silver, gold]
+  D --> W[Radar, confiabilidade, CSV e Parquet para BI]
+  A[Airflow] -. orquestra .-> V
+  M[Monitor a cada 5 min] -. status.json .-> W
+```
+
+## Stack (somente o que roda)
 
 | Camada | Ferramenta |
 | --- | --- |
-| Orquestracao | Apache Airflow |
-| Streaming | Redpanda (API Kafka) |
-| Armazenamento | RustFS (API S3) + Delta Lake; espelho opcional em AWS S3 |
-| Processamento | PySpark e DuckDB |
-| Transformacao | dbt (modelo dimensional e camada semantica) |
-| Qualidade | testes do dbt + contratos de dados |
-| Linhagem | OpenLineage + Marquez |
-| CI/CD e IaC | GitHub Actions, Docker Compose, Terraform |
+| Orquestracao | Apache Airflow 2.10 (DAG diaria e DAG de stream a cada 2 min) |
+| Streaming | Redpanda (API Kafka), consumidor em micro-lotes |
+| Armazenamento | Parquet em disco e RustFS (API S3) |
+| Transformacao e consulta | dbt + DuckDB (bronze, silver, gold) |
+| Qualidade | testes do dbt, contratos de dados em YAML, auditoria de privacidade |
+| Confiabilidade | monitor com alerta no Telegram, postmortems, falha injetada |
+| Linhagem | dbt docs publicado (grafo dos modelos) |
+| Nuvem e BI | Terraform (S3, Glue, Athena, Budgets) e Power BI |
+| CI | GitHub Actions: segredos, higiene, privacidade, Terraform, quickstart |
 
-## Roteiro
+Spark, Delta Lake e OpenLineage foram considerados e **nao** foram construidos: [ADR 0006](docs/decisoes/0006-escopo-real-da-stack.md).
 
-| Fase | Entrega | Status |
+## O que ja foi provado
+
+| Fase | Teste de aceite | Resultado |
 | --- | --- | --- |
-| 0 | Base: capacidade medida, repositorio, CI | em andamento |
-| 1 | Lakehouse com Airflow (bronze, silver, gold) | planejada |
-| 2 | Confiabilidade publica: contratos, linhagem, postmortems | planejada |
-| 3 | Streaming com Redpanda | no ar (aceite de 11/11) |
-| 4 | Vitrine: curriculo verificavel e radar do mercado | no ar (auditoria de privacidade) |
-| 5 | AWS com Terraform e teto de gasto; Power BI | pronta (teste simulado; conta real em janeiro) |
-| 6 | Lancamento | planejada |
+| 1. Lakehouse | 3 execucoes diarias seguidas sem intervencao | rodando; aceite previsto para 13/11 |
+| 2. Confiabilidade | falha injetada detectada e alertada | detectada e recuperada em ciclo de 5 min (11/11) |
+| 3. Streaming | evento chega ao gold em ate 2 min; reprocessar nao duplica | 72 s; reenvio e reprocesso mantiveram 1 linha |
+| 4. Vitrine | nenhum dado pessoal exposto | auditoria automatica no CI e antes de publicar |
+| 5. Nuvem e BI | criar e destruir e reproduzivel | 2 ciclos de 9 recursos em AWS simulada; Athena e Budgets so validados |
+| 6. Lancamento | clonar e subir em maquina limpa em menos de 15 min | 98 s no GitHub Actions (11/11); workflow quickstart repete a cada mudanca |
 
-Detalhes em [docs/ROADMAP.md](docs/ROADMAP.md).
+Detalhes e limites em [docs/ROADMAP.md](docs/ROADMAP.md) e nas [decisoes](docs/decisoes).
 
 ## Privacidade
 
-Este repositorio nunca contem dado pessoal nem segredo. Dados de alunos e de pagamentos nao saem da origem: a plataforma publica apenas agregados ou dados anonimizados, e os exemplos do repositorio sao sinteticos.
+Este repositorio nunca contem dado pessoal nem segredo. Dados de alunos e de pagamentos nao saem da origem: so agregados ou anonimizados sao publicados, com k-anonimato (grupos com menos de 5 vagas sao suprimidos) e uma auditoria que bloqueia a publicacao se achar e-mail, telefone, valor, link de vaga ou campo fora da lista. Os exemplos do repositorio sao sinteticos.
+
+## Estrutura
+
+`ingestao/` extratores, produtor/consumidor e validador · `transformacao/` dbt · `orquestracao/` DAGs · `contratos/` contratos de dados · `confiabilidade/` monitor e auditoria · `nuvem/` e `infra/terraform/` AWS · `powerbi/` consultas e medidas · `vitrine/` paginas publicas · `docs/` roadmap, decisoes, postmortems e custos.
 
 ## Autor
 

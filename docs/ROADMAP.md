@@ -10,4 +10,4 @@ Cada fase so fecha quando o teste de aceite passa.
 | 3. Streaming | Redpanda recebendo eventos; consumidor gravando no bronze | Evento de teste chega ao gold em ate 2 min; reprocessar nao duplica (teste de 11/11: 72 s; reenvio e reprocesso do topico mantiveram 1 linha) |
 | 4. Vitrine | Curriculo verificavel e radar do mercado de dados | Nenhum dado pessoal exposto (auditoria automatica nas paginas e no JSON; teste negativo reprova e-mail, valor, link de vaga e campo fora da lista) |
 | 5. Nuvem e BI | Terraform para AWS com teto de gasto; Power BI sobre a camada gold | Criar e destruir a infraestrutura e reproduzivel (teste de 11/11 em AWS simulada: 2 ciclos de 9 recursos, 0 falhas; Athena e Budgets so validados, ver ADR 0005) |
-| 6. Lancamento | README PT/EN, video curto | Clonar e subir em maquina limpa em menos de 15 min |
+| 6. Lancamento | README PT/EN, video curto | Clonar e subir em maquina limpa em menos de 15 min (teste de 11/11 no GitHub Actions: 98 s, ver workflow quickstart) |
