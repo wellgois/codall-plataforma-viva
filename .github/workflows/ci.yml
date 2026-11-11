@@ -41,3 +41,26 @@ jobs:
           terraform fmt -check -recursive
           terraform init -backend=false
           terraform validate
+  spark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Dependencias
+        run: pip install -q duckdb pyarrow dbt-duckdb "pyspark>=3.5,<4.1"
+      - name: Dados sinteticos e gold do dbt
+        run: |
+          python ingestao/sintetico.py /tmp/landing --dias 30
+          cd transformacao
+          DUCKDB_PATH=/tmp/p.duckdb LANDING_DIR=/tmp/landing dbt build --profiles-dir . --select +gold_radar_demanda
+      - name: Job Spark (memoria limitada a 512 MB) e conferencia com o dbt
+        run: |
+          python spark/gold_radar_demanda.py /tmp/landing /tmp/spark_out --memoria 512m
+          python spark/conferir_com_dbt.py /tmp/p.duckdb /tmp/spark_out
