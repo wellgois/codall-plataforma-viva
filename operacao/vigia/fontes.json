@@ -1,0 +1,19 @@
+{
+  "pm2_logs": "/root/.pm2/logs",
+  "ignorar_pm2": ["codall-supervisor", "claude-proxy"],
+  "containers": {
+    "ap_backend":      {"nome": "APIA (euprofessor)", "codigo": "/edu/euprofessor/ap-saas/backend/src", "reiniciar": "docker restart ap_backend"},
+    "ap_frontend":     {"nome": "APIA (tela)",        "reiniciar": "docker restart ap_frontend"},
+    "wellgois-api":    {"nome": "WellGois SaaS API",  "reiniciar": "docker restart wellgois-api"},
+    "meuingles-api-1": {"nome": "MeuIngles API",      "reiniciar": "docker restart meuingles-api-1"},
+    "root-n8n-1":      {"nome": "n8n",                "reiniciar": "docker restart root-n8n-1"}
+  },
+  "pm2_apps": {
+    "codall":        {"nome": "Codall", "codigo": "/ai/codall/src", "reiniciar": "pm2 restart codall"},
+    "marta-bot":     {"nome": "Marta bot", "reiniciar": "pm2 restart marta-bot"},
+    "personas-bot":  {"nome": "Personas bot", "reiniciar": "pm2 restart personas-bot"},
+    "titusvendas-bot": {"nome": "Titus Vendas bot", "reiniciar": "pm2 restart titusvendas-bot"},
+    "reenconto-bot": {"nome": "Reencontro bot", "reiniciar": "pm2 restart reenconto-bot"}
+  },
+  "limites": {"novos_por_rodada": 5, "novos_por_hora": 12, "reinicios_por_hora": 2, "repetir_apos_horas": 6}
+}
