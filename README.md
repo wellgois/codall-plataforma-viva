@@ -17,7 +17,7 @@ Fontes (5 produtos no ar)
 Ingestao: lote diario (extractors) + eventos (Redpanda, API Kafka)
         |
         v
-Lakehouse: bronze -> silver -> gold   (MinIO/S3 + Delta Lake, PySpark, dbt)
+Lakehouse: bronze -> silver -> gold   (RustFS/S3 + Delta Lake, PySpark, dbt)
         |
         v
 Vitrine publica: confiabilidade, catalogo e linhagem, radar do mercado de dados
@@ -31,7 +31,7 @@ Airflow orquestra | Codall opera e audita | GitHub Actions publica
 | --- | --- |
 | Orquestracao | Apache Airflow |
 | Streaming | Redpanda (API Kafka) |
-| Armazenamento | MinIO (API S3) + Delta Lake; espelho opcional em AWS S3 |
+| Armazenamento | RustFS (API S3) + Delta Lake; espelho opcional em AWS S3 |
 | Processamento | PySpark e DuckDB |
 | Transformacao | dbt (modelo dimensional e camada semantica) |
 | Qualidade | testes do dbt + contratos de dados |

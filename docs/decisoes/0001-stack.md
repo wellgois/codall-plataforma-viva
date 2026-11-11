@@ -10,7 +10,7 @@ A plataforma roda em uma unica VPS (2 CPUs, 8 GB de memoria) junto com os produt
 
 - Airflow para orquestracao (LocalExecutor, por causa da memoria).
 - Redpanda no lugar do Kafka: mesma API, sem JVM, cabe na VPS.
-- MinIO + Delta Lake: API S3 local, com espelho opcional em AWS S3.
+- RustFS + Delta Lake: API S3 local, com espelho opcional em AWS S3.
 - PySpark apenas em lote e fora do horario de uso; DuckDB para consultas baratas.
 - dbt para modelagem, testes e documentacao.
 

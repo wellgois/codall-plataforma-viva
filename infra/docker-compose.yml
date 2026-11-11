@@ -33,15 +33,18 @@ services:
     volumes: [pgdata:/var/lib/postgresql/data]
     healthcheck: {test: ["CMD", "pg_isready", "-U", "airflow"], interval: 10s, retries: 5}
     restart: unless-stopped
-  minio:
-    image: quay.io/minio/minio:latest
-    command: server /data --console-address ":9001"
+  s3:
+    image: rustfs/rustfs:latest
     mem_limit: 384m
     ports: ["127.0.0.1:9100:9000", "127.0.0.1:9101:9001"]
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-    volumes: [minio:/data]
+      RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${S3_SECRET_KEY}
+      RUSTFS_VOLUMES: /data
+      RUSTFS_ADDRESS: ":9000"
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_CONSOLE_ADDRESS: ":9001"
+    volumes: [s3data:/data]
     restart: unless-stopped
   airflow-init:
     <<: *airflow
@@ -60,4 +63,4 @@ services:
     command: scheduler
     mem_limit: 1024m
     restart: unless-stopped
-volumes: {pgdata: {}, minio: {}, warehouse: {}}
+volumes: {pgdata: {}, s3data: {}, warehouse: {}}
