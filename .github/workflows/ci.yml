@@ -64,3 +64,31 @@ jobs:
         run: |
           python spark/gold_radar_demanda.py /tmp/landing /tmp/spark_out --memoria 512m
           python spark/conferir_com_dbt.py /tmp/p.duckdb /tmp/spark_out
+  azure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform Azure fmt e validate
+        working-directory: infra/terraform-azure
+        run: |
+          terraform fmt -check -recursive
+          terraform init -backend=false
+          terraform validate
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencias
+        run: pip install -q duckdb pyarrow dbt-duckdb azure-storage-blob azure-identity
+      - name: Gold de teste
+        run: |
+          python ingestao/sintetico.py /tmp/landing --dias 30
+          (cd transformacao && DUCKDB_PATH=/tmp/p.duckdb LANDING_DIR=/tmp/landing dbt build --profiles-dir . --select +gold_radar_demanda)
+          mkdir -p /tmp/gold/gold_radar_demanda
+          python -c "import duckdb;duckdb.connect('/tmp/p.duckdb',read_only=True).execute(\"copy gold_radar_demanda to '/tmp/gold/gold_radar_demanda/dados.parquet' (format parquet)\")"
+      - name: Azurite - criar, publicar, conferir e destruir (2 ciclos)
+        run: |
+          npx --yes azurite-blob --silent --location /tmp/az --skipApiVersionCheck &
+          sleep 6
+          AZURE_STORAGE_CONNECTION_STRING="UseDevelopmentStorage=true" python infra/terraform-azure/teste-azurite.py /tmp/gold
