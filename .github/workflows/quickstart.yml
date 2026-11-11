@@ -1,0 +1,24 @@
+name: quickstart
+on:
+  workflow_dispatch: {}
+  push:
+    paths: ['quickstart.sh', 'infra/**', 'ingestao/**', 'transformacao/**', 'orquestracao/**', 'contratos/**', '.github/workflows/quickstart.yml']
+permissions:
+  contents: read
+jobs:
+  maquina-limpa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Subir do zero e medir o tempo
+        run: |
+          s=$(date +%s)
+          ./quickstart.sh
+          t=$(( $(date +%s) - s ))
+          echo "tempo total: ${t}s"
+          echo "### Quickstart em maquina limpa: ${t}s (limite 900s)" >> "$GITHUB_STEP_SUMMARY"
+          [ "$t" -le 900 ]
+      - name: Logs em caso de falha
+        if: failure()
+        run: cd infra && docker compose logs --tail=60

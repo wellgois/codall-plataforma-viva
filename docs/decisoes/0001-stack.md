@@ -18,3 +18,5 @@ A plataforma roda em uma unica VPS (2 CPUs, 8 GB de memoria) junto com os produt
 
 - Com 2 CPUs, roda um job Spark por vez.
 - Tudo sobe com Docker Compose; a nuvem e opcional e tem teto de gasto.
+
+> Revisado em 11/11/2026: Spark, Delta Lake e OpenLineage nao foram construidos. Veja [0006](0006-escopo-real-da-stack.md).
