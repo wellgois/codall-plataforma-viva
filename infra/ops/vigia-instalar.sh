@@ -9,3 +9,4 @@ pm2 save >/dev/null
 L="* * * * * cd $R && python3 coletor.py >> /opt/erros/coletor.log 2>&1"
 (crontab -l 2>/dev/null | grep -vF "operacao/vigia/coletor.py"; echo "$L") | crontab -
 echo "$L"
+python3 -c "import vigia;print(\"IA de diagnostico:\", \"disponivel\" if vigia.chave_llm() else \"SEM chave (relatorios sem diagnostico)\")"
