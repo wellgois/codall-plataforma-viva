@@ -11,6 +11,12 @@ def chave_llm():
     if os.environ.get("DEEPSEEK_API_KEY"):
         return os.environ["DEEPSEEK_API_KEY"]
     try:
+        k = (c.BASE / "chave_llm").read_text().strip()
+        if k:
+            return k
+    except Exception:
+        pass
+    try:
         for l in Path("/ai/codall/.env").read_text().splitlines():
             if l.startswith("DEEPSEEK_API_KEY="):
                 return l.split("=", 1)[1].strip().strip('"\'')
