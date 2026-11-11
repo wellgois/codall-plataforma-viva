@@ -23,5 +23,6 @@ docker compose up -d postgres s3
 docker compose up airflow-init 2>&1 | tail -4
 docker compose up -d airflow-webserver airflow-scheduler
 sleep 25
+docker compose exec -T -u root airflow-scheduler chown -R airflow /opt/warehouse
 docker compose ps --format "table {{.Name}}\t{{.Status}}"
 free -m | head -2
