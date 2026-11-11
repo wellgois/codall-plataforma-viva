@@ -26,3 +26,15 @@ variable "limite_athena_bytes" {
   default     = 104857600
   description = "Maximo de bytes lidos por consulta Athena (100 MB). Consulta que passar disso e cancelada."
 }
+
+variable "habilitar_athena" {
+  type        = bool
+  default     = true
+  description = "Cria o workgroup Athena. Desligado so no teste simulado (o moto nao implementa tags do Athena)."
+}
+
+variable "habilitar_orcamento" {
+  type        = bool
+  default     = true
+  description = "Cria o orcamento com alertas. Desligado so no teste simulado (o moto nao implementa assinaturas do Budgets)."
+}

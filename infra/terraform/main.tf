@@ -118,6 +118,7 @@ resource "aws_glue_catalog_table" "operacao_diaria" {
 }
 
 resource "aws_athena_workgroup" "bi" {
+  count         = var.habilitar_athena ? 1 : 0
   name          = "${var.prefixo}-bi"
   force_destroy = true
   configuration {
@@ -154,6 +155,7 @@ resource "aws_iam_user_policy" "publicador" {
 
 # ---------- Teto de gasto ----------
 resource "aws_budgets_budget" "mensal" {
+  count        = var.habilitar_orcamento ? 1 : 0
   name         = "${var.prefixo}-teto-mensal"
   budget_type  = "COST"
   limit_amount = tostring(var.teto_mensal_usd)

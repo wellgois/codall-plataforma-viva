@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Teste de criar/destruir sem tocar na AWS real: aplica o modulo contra uma AWS simulada (moto) em Docker.
 # Roda init, fmt, validate e dois ciclos apply -> destroy (prova de reprodutibilidade).
+# O moto nao implementa tags do Athena nem assinaturas do Budgets: esses dois recursos ficam
+# desligados aqui e sao cobertos por validate (e por plan na conta real).
 set -uo pipefail
 cd "$(dirname "$0")"
 TF=hashicorp/terraform:1.9.8
@@ -33,7 +35,7 @@ HCL
 docker network create $NET >/dev/null
 docker run -d --name pv-moto --network $NET motoserver/moto:latest >/dev/null
 sleep 8
-tf() { docker run --rm --network $NET -e TF_VAR_email_alerta=teste@example.com -v "$PWD/$W:/w" -w /w $TF "$@"; }
+tf() { docker run --rm --network $NET -e TF_VAR_email_alerta=teste@example.com -e TF_VAR_habilitar_athena=false -e TF_VAR_habilitar_orcamento=false -v "$PWD/$W:/w" -w /w $TF "$@"; }
 FALHAS=0
 passo() { if "$@"; then echo "PASS: $*" | cut -c1-90; else echo "FAIL: $*" | cut -c1-90; FALHAS=$((FALHAS+1)); fi; }
 passo tf init -no-color -input=false >/tmp/tf-init.log 2>&1 || tail -5 /tmp/tf-init.log
