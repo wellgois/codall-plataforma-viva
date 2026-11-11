@@ -11,6 +11,7 @@ x-airflow: &airflow
     AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_WEBSERVER_SECRET}
     AIRFLOW__CORE__PARALLELISM: "2"
     AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL: "60"
+    AIRFLOW__WEBSERVER__WORKERS: "1"
     LANDING_DIR: /opt/landing
     DUCKDB_PATH: /opt/warehouse/plataforma.duckdb
   volumes:
@@ -56,7 +57,7 @@ services:
     <<: *airflow
     command: webserver
     ports: ["127.0.0.1:8088:8080"]
-    mem_limit: 768m
+    mem_limit: 1024m
     restart: unless-stopped
   airflow-scheduler:
     <<: *airflow
