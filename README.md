@@ -47,7 +47,7 @@ Airflow orquestra | Codall opera e audita | GitHub Actions publica
 | 2 | Confiabilidade publica: contratos, linhagem, postmortems | planejada |
 | 3 | Streaming com Redpanda | no ar (aceite de 11/11) |
 | 4 | Vitrine: curriculo verificavel e radar do mercado | no ar (auditoria de privacidade) |
-| 5 | AWS com Terraform e teto de gasto; Power BI | planejada |
+| 5 | AWS com Terraform e teto de gasto; Power BI | pronta (teste simulado; conta real em janeiro) |
 | 6 | Lancamento | planejada |
 
 Detalhes em [docs/ROADMAP.md](docs/ROADMAP.md).
