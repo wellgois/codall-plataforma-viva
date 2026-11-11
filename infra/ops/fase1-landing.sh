@@ -3,7 +3,7 @@
 set -euo pipefail
 cd /opt/plataforma-viva
 [ -d .venv ] || python3 -m venv .venv
-.venv/bin/pip install -q pyarrow pyyaml
+.venv/bin/pip install -q "pyarrow>=16,<18" pyyaml
 mkdir -p landing
 .venv/bin/python ingestao/extrair_codall.py --db /ai/codall/data/codall.db --landing landing --salt-file /opt/plataforma-viva/.salt --dias ${1:-30}
 .venv/bin/python ingestao/validar_contrato.py landing contratos

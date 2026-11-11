@@ -1,4 +1,4 @@
 FROM apache/airflow:2.10.5-python3.12
-# pyarrow do container precisa ser >= ao do host que escreve o landing
-# (parquet recente traz estatisticas de tamanho que versoes antigas nao leem).
-RUN pip install --no-cache-dir -U pyarrow dbt-duckdb pyyaml
+# Nao atualizar pyarrow/numpy: o Airflow 2.10 fixa numpy 1.x. Quem escreve o landing
+# (host) usa pyarrow < 18 para gerar parquet legivel por este pyarrow.
+RUN pip install --no-cache-dir dbt-duckdb pyyaml
