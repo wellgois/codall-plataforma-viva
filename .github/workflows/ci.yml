@@ -89,6 +89,7 @@ jobs:
           python -c "import duckdb;duckdb.connect('/tmp/p.duckdb',read_only=True).execute(\"copy gold_radar_demanda to '/tmp/gold/gold_radar_demanda/dados.parquet' (format parquet)\")"
       - name: Azurite - criar, publicar, conferir e destruir (2 ciclos)
         run: |
-          npx --yes azurite-blob --silent --location /tmp/az --skipApiVersionCheck &
+          npm install -g azurite --silent
+          (azurite-blob --silent --location /tmp/az --skipApiVersionCheck &)
           for i in $(seq 1 40); do (echo > /dev/tcp/127.0.0.1/10000) 2>/dev/null && break; sleep 2; done
           AZURE_STORAGE_CONNECTION_STRING="UseDevelopmentStorage=true" python infra/terraform-azure/teste-azurite.py /tmp/gold
