@@ -16,6 +16,14 @@ def chave_llm():
                 return l.split("=", 1)[1].strip().strip('"\'')
     except Exception:
         pass
+    for cmd in ("cd /ai/codall && node -e 'process.stdout.write(require(\"./src/services/secretRef\").resolve(\"DEEPSEEK_API_KEY\")||\"\")'",
+                "docker exec ap_backend printenv DEEPSEEK_API_KEY"):
+        try:
+            _, o = sh(cmd, 20)
+            if re.fullmatch(r"sk-[A-Za-z0-9_\-]{20,}", o.strip()):
+                return o.strip()
+        except Exception:
+            pass
     return ""
 
 
