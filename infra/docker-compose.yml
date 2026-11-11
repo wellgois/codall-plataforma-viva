@@ -34,7 +34,7 @@ services:
     healthcheck: {test: ["CMD", "pg_isready", "-U", "airflow"], interval: 10s, retries: 5}
     restart: unless-stopped
   minio:
-    image: minio/minio:latest
+    image: quay.io/minio/minio:latest
     command: server /data --console-address ":9001"
     mem_limit: 384m
     ports: ["127.0.0.1:9100:9000", "127.0.0.1:9101:9001"]
