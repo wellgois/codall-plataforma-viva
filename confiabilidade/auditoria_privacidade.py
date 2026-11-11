@@ -26,6 +26,20 @@ CAMPOS_RADAR = {
     "gerado_em", "referencia", "k_minimo", "vagas_analisadas", "amostra_pequena", "tecnologias",
     "senioridade", "serie_vagas", "metodologia"}
 CAMPOS_TEC = {"tecnologia", "pct_vagas", "pct_media_7d", "tendencia"}
+CABECALHOS_CSV = {
+    "gold_radar_demanda.csv": "dt,tecnologia,vagas,vagas_com_tec,pct_vagas,pct_media_7d",
+    "gold_operacao_diaria.csv": "dt,projeto,origem,eventos",
+}
+
+
+def auditar_csv(nome: str, texto: str) -> list[str]:
+    esperado = CABECALHOS_CSV.get(nome)
+    primeira = texto.splitlines()[0].strip() if texto else ""
+    if esperado is None:
+        return [f"{nome}: csv fora da lista permitida"]
+    if primeira != esperado:
+        return [f"{nome}: cabecalho inesperado: {primeira[:60]}"]
+    return []
 
 
 def varrer_texto(nome: str, texto: str) -> list[str]:
@@ -64,11 +78,13 @@ def main() -> int:
         return 2
     achados, n = [], 0
     for alvo in map(Path, sys.argv[1:]):
-        arquivos = [alvo] if alvo.is_file() else sorted(p for p in alvo.rglob("*") if p.suffix in {".html", ".json"})
+        arquivos = [alvo] if alvo.is_file() else sorted(p for p in alvo.rglob("*") if p.suffix in {".html", ".json", ".csv"})
         for f in arquivos:
             n += 1
             texto = f.read_text(encoding="utf-8")
             achados += varrer_texto(f.name, texto)
+            if f.suffix == ".csv":
+                achados += auditar_csv(f.name, texto)
             if f.name == "radar.json":
                 achados += auditar_radar(f.name, texto)
     if achados:

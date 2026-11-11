@@ -1,0 +1,14 @@
+// Tabelas: gold_radar_demanda (radar) e gold_operacao_diaria (operacao)
+Ultimo Dia = MAX ( gold_radar_demanda[dt] )
+
+Vagas Analisadas =
+CALCULATE ( MAX ( gold_radar_demanda[vagas] ), gold_radar_demanda[dt] = [Ultimo Dia] )
+
+Demanda Atual % =
+CALCULATE ( MAX ( gold_radar_demanda[pct_vagas] ), gold_radar_demanda[dt] = [Ultimo Dia] )
+
+Tendencia (pontos) =
+[Demanda Atual %]
+    - CALCULATE ( MAX ( gold_radar_demanda[pct_media_7d] ), gold_radar_demanda[dt] = [Ultimo Dia] )
+
+Eventos no Periodo = SUM ( gold_operacao_diaria[eventos] )

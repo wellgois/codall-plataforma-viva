@@ -18,6 +18,7 @@ x-airflow: &airflow
     - ../orquestracao/dags:/opt/airflow/dags:ro
     - ../transformacao:/opt/transformacao
     - ../ingestao:/opt/ingestao:ro
+    - ../nuvem:/opt/nuvem:ro
     - ../contratos:/opt/contratos:ro
     - ${LANDING_HOST_DIR}:/opt/landing
     - warehouse:/opt/warehouse
