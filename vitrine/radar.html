@@ -37,6 +37,7 @@ footer{padding:28px 0 48px;color:var(--mut);font-size:14px;border-top:1px solid 
 a{color:var(--ac)}
 </style>
 <style>.big{font-size:28px;font-weight:700}.ok{color:var(--ok)}.bad{color:#ff6b6b}.mut{color:var(--mut)}</style>
+<style>.bar .v{width:auto;min-width:28px;white-space:nowrap}.bar .n{width:96px}</style>
 </head>
 <body>
 <div class="w">
@@ -94,7 +95,7 @@ document.getElementById("analisar").addEventListener("click",function(){
   var ach=TEC.filter(function(p){return p[1].test(txt)});
   if(!ach.length){res.appendChild(el("p","mut","Nenhuma tecnologia do radar encontrada nesse texto."));return}
   res.appendChild(el("p","l",ach.length+" tecnologias do radar nesta vaga:"));
-  ach.forEach(function(p){var m=mercado(p[0]);barra(res,p[0],m?m.pct_vagas:0,m?Math.round(m.pct_vagas)+"% do mercado":"abaixo do corte")});
+  ach.forEach(function(p){var m=mercado(p[0]);barra(res,p[0],m?m.pct_vagas:0,m?Math.round(m.pct_vagas)+"% do mercado":"poucas vagas (menos de 5)")});
   res.appendChild(el("p","mut","Barra = quantas vagas do mercado pedem a mesma tecnologia. Nada foi enviado ao servidor."));
 });
 </script>
