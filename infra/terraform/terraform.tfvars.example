@@ -1,0 +1,3 @@
+# Copie para meu.auto.tfvars (ignorado pelo git).
+email_alerta    = "voce@exemplo.com"
+teto_mensal_usd = 8

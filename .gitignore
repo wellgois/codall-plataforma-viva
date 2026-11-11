@@ -22,3 +22,8 @@ transformacao/.user.yml
 .alerta
 estado-monitor.json
 .stream-estado
+.terraform/
+.terraform.lock.hcl.bak
+*.auto.tfvars
+*.tfstate*
+infra/terraform/.tmp-teste/
