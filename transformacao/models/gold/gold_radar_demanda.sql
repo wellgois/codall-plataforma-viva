@@ -4,7 +4,9 @@ with vagas_dia as (
 ),
 tec_dia as (
     select dt, tecnologia, count(distinct vaga_hash) as vagas_com_tec
-    from {{ ref('silver_requisitos') }} group by 1, 2
+    from {{ ref('silver_requisitos') }}
+    where tecnologia <> 'Outros'  -- requisitos sem tecnologia canonica nao entram no radar
+    group by 1, 2
 )
 select
     t.dt, t.tecnologia, v.vagas, t.vagas_com_tec,
