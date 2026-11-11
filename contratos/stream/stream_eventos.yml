@@ -1,0 +1,16 @@
+nome: stream_eventos
+descricao: >
+  Eventos operacionais do Codall em tempo quase real (um por linha), vindos do
+  topico codall.eventos do Redpanda. Sem texto, comando, segredo ou pessoa:
+  so o tipo do evento. event_id e deterministico para permitir deduplicar.
+dono: Wellington Gois
+classificacao: interno-agregavel
+particao: dt
+colunas:
+  - {nome: event_id, tipo: string, obrigatorio: true, descricao: "identificador deterministico (ex.: gov-1234)"}
+  - {nome: ts, tipo: timestamp, obrigatorio: true, descricao: instante do evento (UTC)}
+  - {nome: dt, tipo: date, obrigatorio: true, descricao: dia do evento}
+  - {nome: origem, tipo: string, obrigatorio: true, descricao: tipo de origem, ex. governanca}
+  - {nome: projeto, tipo: string, obrigatorio: true, descricao: projeto de origem}
+  - {nome: categoria, tipo: string, obrigatorio: true, descricao: tipo do evento}
+  - {nome: qtd, tipo: int64, obrigatorio: true, descricao: sempre 1 por evento}

@@ -16,3 +16,9 @@ models:
   - name: gold_operacao_diaria
     columns:
       - {name: eventos, tests: [not_null]}
+  - name: stream_silver_eventos
+    columns:
+      - {name: event_id, tests: [not_null, unique]}
+  - name: stream_gold_eventos_minuto
+    columns:
+      - {name: eventos, tests: [not_null]}

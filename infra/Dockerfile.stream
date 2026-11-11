@@ -1,0 +1,4 @@
+FROM python:3.12-slim
+# pyarrow < 18: o parquet precisa ser legivel pelo pyarrow do Airflow (mesma regra da Fase 1).
+RUN pip install --no-cache-dir confluent-kafka "pyarrow<18"
+WORKDIR /app

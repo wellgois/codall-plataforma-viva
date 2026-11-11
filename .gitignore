@@ -21,3 +21,4 @@ infra/.env
 transformacao/.user.yml
 .alerta
 estado-monitor.json
+.stream-estado

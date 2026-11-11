@@ -19,6 +19,6 @@ with DAG(
     )
     dbt = BashOperator(
         task_id="dbt_build",
-        bash_command="cd /opt/transformacao && dbt build --profiles-dir . --target-path /tmp/dbt-target --log-path /tmp/dbt-logs",
+        bash_command="cd /opt/transformacao && dbt build --exclude tag:stream --profiles-dir . --target-path /tmp/dbt-target --log-path /tmp/dbt-logs",
     )
     contratos >> dbt

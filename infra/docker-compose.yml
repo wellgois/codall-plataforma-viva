@@ -47,6 +47,34 @@ services:
       RUSTFS_CONSOLE_ADDRESS: ":9001"
     volumes: [s3data:/data]
     restart: unless-stopped
+  redpanda:
+    image: redpandadata/redpanda:${REDPANDA_TAG:-v24.3.1}
+    mem_limit: 768m
+    command:
+      - redpanda
+      - start
+      - --mode=dev-container
+      - --smp=1
+      - --memory=512M
+      - --reserve-memory=0M
+      - --overprovisioned
+      - --kafka-addr=internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr=internal://redpanda:9092,external://127.0.0.1:19092
+    ports: ["127.0.0.1:19092:19092"]
+    volumes: [redpanda:/var/lib/redpanda/data]
+    healthcheck: {test: ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true'"], interval: 15s, retries: 8}
+    restart: unless-stopped
+  stream-consumidor:
+    build: {context: ., dockerfile: Dockerfile.stream}
+    image: plataforma-viva/stream:local
+    mem_limit: 256m
+    command: python /app/stream_consumidor.py --landing /opt/landing --broker redpanda:9092
+    volumes:
+      - ../ingestao:/app:ro
+      - ${LANDING_HOST_DIR}:/opt/landing
+    depends_on:
+      redpanda: {condition: service_healthy}
+    restart: unless-stopped
   airflow-init:
     <<: *airflow
     command: bash -c "airflow db migrate && airflow users create --username admin --role Admin --firstname W --lastname G --email admin@localhost --password \"$${AIRFLOW_ADMIN_PASSWORD}\" || true"
@@ -64,4 +92,4 @@ services:
     command: scheduler
     mem_limit: 1024m
     restart: unless-stopped
-volumes: {pgdata: {}, s3data: {}, warehouse: {}}
+volumes: {pgdata: {}, s3data: {}, warehouse: {}, redpanda: {}}
