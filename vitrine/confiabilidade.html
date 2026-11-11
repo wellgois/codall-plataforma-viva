@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Confiabilidade &ndash; Plataforma Viva em Dados</title>
+<meta name="description" content="Estado em tempo quase real da plataforma de dados: contratos, frescor, execu&ccedil;&atilde;o da DAG e hist&oacute;rico de incidentes.">
+<style>
+:root{--bg:#0b0f1a;--card:#121829;--line:#222b44;--tx:#e8ecf6;--mut:#9aa6c4;--ac:#4ea1ff;--ok:#3ddc97}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.w{max-width:880px;margin:0 auto;padding:0 20px}
+header{padding:56px 0 28px}
+.tag{color:var(--ac);font-weight:600;letter-spacing:.08em;font-size:13px;text-transform:uppercase}
+h1{font-size:clamp(30px,6vw,48px);line-height:1.12;margin:12px 0}
+p.l{color:var(--mut);font-size:18px;max-width:660px;margin:0 0 8px}
+.btn{display:inline-block;padding:12px 18px;border-radius:10px;border:1px solid var(--line);color:var(--tx);text-decoration:none;margin:8px 8px 0 0;font-weight:600}
+.btn.p{background:var(--ac);border-color:var(--ac);color:#04122a}
+section{padding:28px 0;border-top:1px solid var(--line)}
+h2{font-size:22px;margin:0 0 12px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.c{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.c b{display:block;margin-bottom:4px}
+.c span{color:var(--mut);font-size:15px}
+.bar{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:15px}
+.bar .n{width:110px;flex:none}
+.bar .t{flex:1;background:var(--line);border-radius:5px;height:10px}
+.bar i{display:block;height:10px;border-radius:5px;background:var(--ac)}
+.bar .v{width:28px;text-align:right;color:var(--mut)}
+.st{font-size:13px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--mut);white-space:nowrap}
+.st.on{color:var(--ok);border-color:var(--ok)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.flow{display:grid;gap:6px;text-align:center}
+.flow .c{padding:12px}.flow .ar{color:var(--mut)}
+footer{padding:28px 0 48px;color:var(--mut);font-size:14px;border-top:1px solid var(--line)}
+a{color:var(--ac)}
+</style>
+<style>.big{font-size:28px;font-weight:700}.ok{color:var(--ok)}.bad{color:#ff6b6b}.mut{color:var(--mut)}</style>
+</head>
+<body>
+<div class="w">
+<header>
+<div class="tag">Plataforma Viva &middot; confiabilidade</div>
+<h1>Est&aacute; no ar? Prova ao vivo.</h1>
+<p class="l">Um monitor roda a cada 5 minutos na VPS e publica o resultado abaixo. Nada &eacute; escrito &agrave; m&atilde;o: se algo quebrar, esta p&aacute;gina mostra.</p>
+</header>
+<section>
+<div class="c"><div class="big" id="geral">carregando&hellip;</div><div class="mut" id="quando"></div></div>
+</section>
+<section>
+<h2>Verifica&ccedil;&otilde;es</h2>
+<table id="checks"><tr><th>Verifica&ccedil;&atilde;o</th><th>Estado</th><th>Detalhe</th></tr></table>
+</section>
+<section>
+<h2>Incidentes</h2>
+<table id="incs"><tr><th>In&iacute;cio (UTC)</th><th>Fim</th><th>Causa</th><th>Alerta</th></tr></table>
+<p class="mut">An&aacute;lises completas, sem culpados, em <a href="https://github.com/wellgois/codall-plataforma-viva/tree/main/docs/postmortems">docs/postmortems</a>.</p>
+</section>
+<section>
+<h2>Linhagem e documenta&ccedil;&atilde;o</h2>
+<p><a href="/plataforma/dbt-docs/index.html">Grafo de linhagem e cat&aacute;logo dos modelos (dbt docs)</a>, atualizado todo dia ap&oacute;s a DAG.</p>
+</section>
+<footer><a href="/">&larr; Plataforma Viva</a> &middot; <a href="https://github.com/wellgois/codall-plataforma-viva">GitHub</a></footer>
+</div>
+<script>
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+fetch("/plataforma/status.json",{cache:"no-store"}).then(function(r){return r.json()}).then(function(d){
+ var g=document.getElementById("geral");
+ g.textContent=d.status==="ok"?"Operando normalmente":"Falha detectada";
+ g.className="big "+(d.status==="ok"?"ok":"bad");
+ document.getElementById("quando").textContent="Verificado em "+d.gerado_em.replace("T"," ").replace("Z"," UTC");
+ var t=document.getElementById("checks");
+ d.checks.forEach(function(c){t.insertAdjacentHTML("beforeend","<tr><td>"+esc(c.nome.replace(/_/g," "))+"</td><td class='"+(c.estado==="ok"?"ok":"bad")+"'>"+esc(c.estado)+"</td><td class='mut'>"+esc(c.detalhe)+"</td></tr>")});
+ var i=document.getElementById("incs");
+ if(!d.incidentes.length){i.insertAdjacentHTML("beforeend","<tr><td colspan='4' class='mut'>Nenhum incidente registrado.</td></tr>")}
+ d.incidentes.slice().reverse().forEach(function(x){i.insertAdjacentHTML("beforeend","<tr><td>"+esc(x.inicio)+"</td><td>"+esc(x.fim||"em aberto")+"</td><td class='mut'>"+esc((x.causas||[]).join("; "))+"</td><td>"+(x.alerta_enviado?"enviado":"n&atilde;o configurado")+"</td></tr>")});
+}).catch(function(){var g=document.getElementById("geral");g.textContent="Sem dados do monitor";g.className="big bad"});
+</script>
+</body>
+</html>

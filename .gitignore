@@ -19,3 +19,5 @@ transformacao/logs/
 landing/
 infra/.env
 transformacao/.user.yml
+.alerta
+estado-monitor.json
