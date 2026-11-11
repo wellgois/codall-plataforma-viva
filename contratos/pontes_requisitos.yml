@@ -1,0 +1,16 @@
+nome: pontes_requisitos
+descricao: >
+  Demanda do mercado: um registro por requisito de cada vaga de dados lida pelo
+  radar do Pontes. Contem apenas informacao publica da vaga. Nao contem o status
+  de candidatura nem o cruzamento com o curriculo de ninguem.
+dono: Wellington Gois
+classificacao: interno-agregavel
+particao: dt
+frescor_maximo_horas: 36
+colunas:
+  - {nome: dt, tipo: date, obrigatorio: true, descricao: dia da extracao}
+  - {nome: vaga_hash, tipo: string, obrigatorio: true, descricao: hash curto e salgado do id da vaga}
+  - {nome: fonte_tipo, tipo: string, obrigatorio: true, descricao: "gupy, remotive, manual ou sintetico"}
+  - {nome: titulo_vaga, tipo: string, obrigatorio: true, descricao: titulo publicado da vaga}
+  - {nome: requisito_nome, tipo: string, obrigatorio: true, descricao: texto do requisito}
+  - {nome: requisito_tipo, tipo: string, obrigatorio: false, descricao: categoria atribuida pelo radar}

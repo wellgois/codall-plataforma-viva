@@ -1,0 +1,18 @@
+version: 2
+models:
+  - name: silver_requisitos
+    columns:
+      - {name: vaga_hash, tests: [not_null]}
+      - {name: tecnologia, tests: [not_null]}
+      - name: senioridade
+        tests:
+          - accepted_values: {arguments: {values: [junior, pleno, senior, nao_informado]}}
+  - name: gold_radar_demanda
+    columns:
+      - {name: pct_vagas, tests: [not_null]}
+    tests:
+      - dbt_utils_free_unique:
+          column_names: [dt, tecnologia]
+  - name: gold_operacao_diaria
+    columns:
+      - {name: eventos, tests: [not_null]}

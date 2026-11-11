@@ -1,0 +1,7 @@
+plataforma_viva:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DUCKDB_PATH', 'plataforma.duckdb') }}"
+      threads: 2

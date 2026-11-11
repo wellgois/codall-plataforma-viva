@@ -11,3 +11,10 @@ data/
 *.tfstate*
 .terraform/
 secrets*
+
+# dbt / duckdb / landing
+transformacao/target/
+transformacao/logs/
+*.duckdb
+landing/
+infra/.env

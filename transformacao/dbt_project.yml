@@ -1,0 +1,13 @@
+name: plataforma_viva
+version: "0.1.0"
+config-version: 2
+profile: plataforma_viva
+model-paths: ["models"]
+test-paths: ["tests"]
+vars:
+  landing: "{{ env_var('LANDING_DIR', '../landing') }}"
+models:
+  plataforma_viva:
+    bronze: {+materialized: view}
+    silver: {+materialized: table}
+    gold: {+materialized: table}

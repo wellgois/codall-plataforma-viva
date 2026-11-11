@@ -1,0 +1,14 @@
+nome: codall_eventos
+descricao: >
+  Operacao do Codall em contagens por dia. Ja chega agregado da origem: nunca
+  traz texto de conversa, comando, segredo ou identificador de pessoa.
+dono: Wellington Gois
+classificacao: interno-agregavel
+particao: dt
+frescor_maximo_horas: 36
+colunas:
+  - {nome: dt, tipo: date, obrigatorio: true, descricao: dia do evento}
+  - {nome: origem, tipo: string, obrigatorio: true, descricao: "tarefa, restart, inspecao, chat, governanca ou pontes"}
+  - {nome: projeto, tipo: string, obrigatorio: true, descricao: "codall, euprofessor, wellgois, jogandologica, meuingles ou outros"}
+  - {nome: categoria, tipo: string, obrigatorio: true, descricao: resultado ou tipo do evento}
+  - {nome: qtd, tipo: int64, obrigatorio: true, descricao: quantidade de eventos}

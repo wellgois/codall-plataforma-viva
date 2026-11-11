@@ -1,0 +1,63 @@
+# Plataforma Viva - Fase 1. Tudo preso a 127.0.0.1 e com limite de memoria.
+name: plataforma-viva
+x-airflow: &airflow
+  image: apache/airflow:2.10.5-python3.12
+  environment: &airflow-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:${AIRFLOW_DB_PASSWORD}@postgres/airflow
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW_FERNET_KEY}
+    AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_WEBSERVER_SECRET}
+    AIRFLOW__CORE__PARALLELISM: "2"
+    AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL: "60"
+    _PIP_ADDITIONAL_REQUIREMENTS: "dbt-duckdb==1.10.* pyarrow pyyaml"
+    LANDING_DIR: /opt/landing
+    DUCKDB_PATH: /opt/warehouse/plataforma.duckdb
+  volumes:
+    - ../orquestracao/dags:/opt/airflow/dags:ro
+    - ../transformacao:/opt/transformacao
+    - ../ingestao:/opt/ingestao:ro
+    - ../contratos:/opt/contratos:ro
+    - ${LANDING_HOST_DIR}:/opt/landing
+    - warehouse:/opt/warehouse
+  depends_on:
+    postgres: {condition: service_healthy}
+services:
+  postgres:
+    image: postgres:16-alpine
+    mem_limit: 256m
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: ${AIRFLOW_DB_PASSWORD}
+      POSTGRES_DB: airflow
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: {test: ["CMD", "pg_isready", "-U", "airflow"], interval: 10s, retries: 5}
+    restart: unless-stopped
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    mem_limit: 384m
+    ports: ["127.0.0.1:9100:9000", "127.0.0.1:9101:9001"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes: [minio:/data]
+    restart: unless-stopped
+  airflow-init:
+    <<: *airflow
+    command: bash -c "airflow db migrate && airflow users create --username admin --role Admin --firstname W --lastname G --email admin@localhost --password \"$${AIRFLOW_ADMIN_PASSWORD}\" || true"
+    environment: {<<: *airflow-env, AIRFLOW_ADMIN_PASSWORD: "${AIRFLOW_ADMIN_PASSWORD}"}
+    restart: "no"
+    mem_limit: 768m
+  airflow-webserver:
+    <<: *airflow
+    command: webserver
+    ports: ["127.0.0.1:8088:8080"]
+    mem_limit: 768m
+    restart: unless-stopped
+  airflow-scheduler:
+    <<: *airflow
+    command: scheduler
+    mem_limit: 1024m
+    restart: unless-stopped
+volumes: {pgdata: {}, minio: {}, warehouse: {}}
