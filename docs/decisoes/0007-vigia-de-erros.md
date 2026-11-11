@@ -16,3 +16,7 @@ Data: 11/11/2026. Motivo: a geracao de uma prova no APIA falhou por 30 minutos (
 
 ## Teste
 `operacao/vigia/teste_local.sh` (log falso, IA simulada) e `infra/ops/vigia-aceite.sh` (erro injetado na VPS, tempo ate o relatorio).
+
+## Resultado (11/11/2026)
+- Caso real: o erro da prova do APIA foi diagnosticado pelo vigia e a correcao aplicada com backup (relatorio e mensagem no Telegram).
+- Aceite com erro injetado: relatorio e Telegram dentro do limite de 180 s, com e-mail e telefone mascarados (`infra/ops/vigia-aceite.sh`: ACEITE OK).
