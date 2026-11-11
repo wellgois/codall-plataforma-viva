@@ -1,7 +1,8 @@
 # Plataforma Viva - Fase 1. Tudo preso a 127.0.0.1 e com limite de memoria.
 name: plataforma-viva
 x-airflow: &airflow
-  image: apache/airflow:2.10.5-python3.12
+  image: plataforma-viva/airflow:local
+  build: {context: ., dockerfile: Dockerfile.airflow}
   environment: &airflow-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:${AIRFLOW_DB_PASSWORD}@postgres/airflow
@@ -10,7 +11,6 @@ x-airflow: &airflow
     AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_WEBSERVER_SECRET}
     AIRFLOW__CORE__PARALLELISM: "2"
     AIRFLOW__SCHEDULER__MIN_FILE_PROCESS_INTERVAL: "60"
-    _PIP_ADDITIONAL_REQUIREMENTS: "dbt-duckdb==1.10.* pyarrow pyyaml"
     LANDING_DIR: /opt/landing
     DUCKDB_PATH: /opt/warehouse/plataforma.duckdb
   volumes:
