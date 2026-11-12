@@ -29,9 +29,12 @@ async function perguntar(prompt) {
   const lote = new Date().toISOString();
   const base = fs.mkdtempSync('/tmp/regressao-');
   let ok = 0, n = 0;
-  for (const t of tarefas.filter(x => !filtro || x.id === filtro)) {
+  const reps = Math.max(1, parseInt(process.env.REPS || '1', 10));
+  const lista = [];
+  for (let r = 1; r <= reps; r++) for (const t of tarefas.filter(x => !filtro || x.id === filtro)) lista.push([t, r]);
+  for (const [t, rep] of lista) {
     n++;
-    const dir = path.join(base, t.id); fs.mkdirSync(dir);
+    const dir = path.join(base, t.id + '-r' + rep); fs.mkdirSync(dir);
     const prompt = `Escreva APENAS um bloco de codigo Python (sem explicacao), usando so a biblioteca padrao, que define: ${t.prompt}`;
     const t0 = Date.now(); let resp = '', erro = null, passou = false, saida = '';
     try {
@@ -43,11 +46,11 @@ async function perguntar(prompt) {
       passou = r.status === 0 && /ok\s*$/.test(r.stdout || '');
     } catch (e) { erro = String(e.message || e).slice(0, 200); }
     const tokens = Math.round((prompt.length + resp.length) / 3.5);
-    const linha = { lote, id: t.id, nome: t.nome, assunto: t.assunto, passou, ms: Date.now() - t0,
+    const linha = { lote, rep, id: t.id, nome: t.nome, assunto: t.assunto, passou, ms: Date.now() - t0,
       tokens_estimados: tokens, custo_usd_estimado: +(tokens * USD_POR_MTOK / 1e6).toFixed(6), erro, saida: passou ? '' : saida };
     fs.appendFileSync(OUT, JSON.stringify(linha) + '\n');
     if (passou) ok++;
-    console.log((passou ? 'OK  ' : 'FALHA ') + t.id + ' ' + t.nome + ' (' + linha.ms + 'ms)');
+    console.log((passou ? 'OK  ' : 'FALHA ') + t.id + ' r' + rep + ' ' + t.nome + ' (' + linha.ms + 'ms)');
   }
   console.log(`resultado: ${ok}/${n} em ${lote}`);
   process.exit(0);
