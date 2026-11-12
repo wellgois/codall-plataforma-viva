@@ -6,7 +6,23 @@ const CODALL = process.env.CODALL_DIR || '/ai/codall';
 try { require(path.join(CODALL, 'node_modules/dotenv')).config({ path: path.join(CODALL, '.env') }); } catch (e) {}
 const ai = require(path.join(CODALL, 'src/services/aiProvider.js'));
 const tarefas = require('./tarefas.js');
+const perguntas = require('./perguntas.js');
 const OUT = path.join(CODALL, 'data/regressao.jsonl');
+const TOTAL = parseInt(process.env.TOTAL || '100', 10);
+
+function hash(str) { let h = 2166136261; for (const c of str) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function embaralha(arr, rand) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+// monta as perguntas do dia: ordem e alternativas sorteadas pela data
+function perguntasDoDia(dia, quantas) {
+  const todas = perguntas.map((p, i) => ({ id: 'q' + String(i + 1).padStart(3, '0'), area: p[0], q: p[1], certa: p[2], erradas: p.slice(3) }));
+  const sel = embaralha(todas, rng(hash(dia))).slice(0, quantas);
+  return sel.map(p => {
+    const alts = embaralha([p.certa, ...p.erradas], rng(hash(dia + p.id)));
+    return { ...p, alts, gabarito: 'ABCD'[alts.indexOf(p.certa)] };
+  });
+}
+
 const USD_POR_MTOK = 0.18;
 
 function codigo(texto) {
@@ -29,28 +45,39 @@ async function perguntar(prompt) {
   const lote = new Date().toISOString();
   const base = fs.mkdtempSync('/tmp/regressao-');
   let ok = 0, n = 0;
-  const reps = Math.max(1, parseInt(process.env.REPS || '1', 10));
-  const lista = [];
-  for (let r = 1; r <= reps; r++) for (const t of tarefas.filter(x => !filtro || x.id === filtro)) lista.push([t, r]);
-  for (const [t, rep] of lista) {
+  const dia = new Date().toISOString().slice(0, 10);
+  const codigoTarefas = tarefas.filter(x => !filtro || x.id === filtro);
+  const nPerg = filtro ? 0 : Math.max(0, TOTAL - codigoTarefas.length);
+  const lista = [...codigoTarefas.map(t => ({ tipo: 'codigo', t })), ...perguntasDoDia(dia, nPerg).map(p => ({ tipo: 'mcq', p }))];
+  for (const it of lista) {
     n++;
-    const dir = path.join(base, t.id + '-r' + rep); fs.mkdirSync(dir);
-    const prompt = `Escreva APENAS um bloco de codigo Python (sem explicacao), usando so a biblioteca padrao, que define: ${t.prompt}`;
-    const t0 = Date.now(); let resp = '', erro = null, passou = false, saida = '';
+    const t0 = Date.now(); let resp = '', erro = null, passou = false, saida = '', prompt = '', meta;
     try {
-      resp = await perguntar(prompt);
-      fs.writeFileSync(path.join(dir, 'sol.py'), codigo(resp));
-      fs.writeFileSync(path.join(dir, 'teste.py'), t.teste + '\n');
-      const r = cp.spawnSync('python3', ['teste.py'], { cwd: dir, timeout: 20000, encoding: 'utf8' });
-      saida = ((r.stdout || '') + (r.stderr || '')).trim().slice(-300);
-      passou = r.status === 0 && /ok\s*$/.test(r.stdout || '');
+      if (it.tipo === 'codigo') {
+        const t = it.t; meta = { id: t.id, nome: t.nome, assunto: t.assunto };
+        const dir = path.join(base, t.id); fs.mkdirSync(dir);
+        prompt = `Escreva APENAS um bloco de codigo Python (sem explicacao), usando so a biblioteca padrao, que define: ${t.prompt}`;
+        resp = await perguntar(prompt);
+        fs.writeFileSync(path.join(dir, 'sol.py'), codigo(resp));
+        fs.writeFileSync(path.join(dir, 'teste.py'), t.teste + '\n');
+        const r = cp.spawnSync('python3', ['teste.py'], { cwd: dir, timeout: 20000, encoding: 'utf8' });
+        saida = ((r.stdout || '') + (r.stderr || '')).trim().slice(-300);
+        passou = r.status === 0 && /ok\s*$/.test(r.stdout || '');
+      } else {
+        const p = it.p; meta = { id: p.id, nome: p.q.slice(0, 80), assunto: p.area };
+        prompt = `Pergunta de multipla escolha (estilo certificacao). Responda sem executar comandos. Termine com uma unica linha "RESPOSTA: X", onde X e A, B, C ou D.\n\n${p.q}\n` + p.alts.map((a, i) => `${'ABCD'[i]}) ${a}`).join('\n');
+        resp = await perguntar(prompt);
+        const ms = [...resp.matchAll(/RESPOSTA:\s*\**\s*([A-D])\b/gi)];
+        const dada = ms.length ? ms[ms.length - 1][1].toUpperCase() : null;
+        passou = dada === p.gabarito; saida = passou ? '' : `deu ${dada || 'nenhuma'}, gabarito ${p.gabarito}`;
+      }
     } catch (e) { erro = String(e.message || e).slice(0, 200); }
     const tokens = Math.round((prompt.length + resp.length) / 3.5);
-    const linha = { lote, rep, id: t.id, nome: t.nome, assunto: t.assunto, passou, ms: Date.now() - t0,
+    const linha = { lote, dia, tipo: it.tipo, ...meta, passou, ms: Date.now() - t0,
       tokens_estimados: tokens, custo_usd_estimado: +(tokens * USD_POR_MTOK / 1e6).toFixed(6), erro, saida: passou ? '' : saida };
     fs.appendFileSync(OUT, JSON.stringify(linha) + '\n');
     if (passou) ok++;
-    console.log((passou ? 'OK  ' : 'FALHA ') + t.id + ' r' + rep + ' ' + t.nome + ' (' + linha.ms + 'ms)');
+    console.log((passou ? 'OK  ' : 'FALHA ') + meta.id + ' ' + meta.nome.slice(0, 40));
   }
   console.log(`resultado: ${ok}/${n} em ${lote}`);
   process.exit(0);
