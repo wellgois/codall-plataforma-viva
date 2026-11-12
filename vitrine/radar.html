@@ -45,7 +45,7 @@ a{color:var(--ac)}
 <div class="tag">Plataforma Viva &middot; radar do mercado</div>
 <h1>O que as vagas de dados pedem hoje.</h1>
 <p class="l">Percentual das vagas de Engenharia de Dados que pedem cada tecnologia. Os n&uacute;meros v&ecirc;m da camada gold da plataforma e s&atilde;o atualizados todo dia, sem edi&ccedil;&atilde;o manual.</p>
-<a class="btn p" href="#cole">Cole sua vaga</a><a class="btn" href="/">Voltar ao projeto</a>
+<a class="btn p" href="#cole">Avalie o perfil para a sua vaga</a><a class="btn" href="/">Voltar ao projeto</a>
 </header>
 <section>
 <div class="c"><div class="big" id="resumo">carregando&hellip;</div><div class="mut" id="quando"></div></div>
@@ -60,8 +60,8 @@ a{color:var(--ac)}
 <div id="sen"></div>
 </section>
 <section id="cole">
-<h2>Cole sua vaga e veja o match</h2>
-<p class="l" style="font-size:16px">Cole o texto de uma vaga e veja quais tecnologias ela pede, quais delas t&ecirc;m prova no curr&iacute;culo verific&aacute;vel e o qu&atilde;o comuns s&atilde;o no mercado. Tudo roda no seu navegador: o texto n&atilde;o &eacute; enviado, gravado nem registrado em lugar nenhum.</p>
+<h2>Avalie o perfil do Wellington para a sua vaga</h2>
+<p class="l" style="font-size:16px">Voc&ecirc; est&aacute; avaliando o perfil de <b>Wellington Gois como Engenheiro de Dados</b> para a sua empresa. Cole abaixo os requisitos da sua vaga. A p&aacute;gina identifica as tecnologias pedidas e mostra, para cada uma, se o portf&oacute;lio tem <b>prova</b> (c&oacute;digo, teste ou n&uacute;mero que voc&ecirc; pode conferir), <b>prova parcial</b> ou <b>nenhuma prova</b>, e o quanto o mercado pede essa tecnologia. Tudo roda no seu navegador: o texto n&atilde;o &eacute; enviado, gravado nem registrado em lugar nenhum.</p>
 <textarea id="vaga" rows="7" style="width:100%;background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit" placeholder="Cole aqui os requisitos da vaga"></textarea>
 <button class="btn p" id="analisar" type="button" style="cursor:pointer">Analisar</button>
 <div id="res" style="margin-top:12px"></div>
@@ -124,7 +124,7 @@ document.getElementById("analisar").addEventListener("click",function(){
   var ach=TEC.filter(function(p){return p[1].test(txt)});
   if(!ach.length){res.appendChild(el("p","mut","Nenhuma tecnologia do radar encontrada nesse texto."));return}
   var ok=0,par=0,fal=0;ach.forEach(function(p){var st=PROVA[p[0]][0];if(st==="ok")ok++;else if(st==="parcial")par++;else fal++});
-  var h=el("h3",null,"Match com o currículo: "+ok+" de "+ach.length+" com prova"+(par?", "+par+(par>1?" parciais":" parcial"):"")+(fal?", "+fal+" sem prova":""));
+  var h=el("h3",null,"Perfil do Wellington para esta vaga: "+ok+" de "+ach.length+" tecnologias com prova"+(par?", "+par+(par>1?" parciais":" parcial"):"")+(fal?", "+fal+" sem prova":""));
   h.style.margin="6px 0";res.appendChild(h);
   ["ok","parcial","falta"].forEach(function(st){ach.forEach(function(p){var v=PROVA[p[0]];if(v[0]===st)linha(res,p[0],st,v[1],v[2])})});
   var t=el("h3",null,"O quanto o mercado pede");t.style.margin="18px 0 6px";res.appendChild(t);

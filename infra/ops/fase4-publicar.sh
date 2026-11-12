@@ -11,6 +11,7 @@ python3 $R/confiabilidade/auditoria_privacidade.py $T || { echo "PUBLICACAO BLOQ
 mkdir -p $P/plataforma
 cp $T/radar.json $P/plataforma/radar.json
 cp $R/vitrine/img/perfil.jpg $P/perfil.jpg
+mkdir -p $P/vitrine-img && cp $R/vitrine/img/bi-codall.jpg $R/vitrine/img/governanca-codall.jpg $P/vitrine-img/
 cp $T/radar.html $P/radar.html
 cp $T/curriculo.html $P/curriculo.html
 cp $T/index.html $P/vitrine.html

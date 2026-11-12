@@ -38,6 +38,15 @@ td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertic
 .flow .c{padding:12px}.flow .ar{color:var(--mut)}
 footer{padding:28px 0 48px;color:var(--mut);font-size:14px;border-top:1px solid var(--line)}
 a{color:var(--ac)}
+.tl{border-left:2px solid var(--line);margin:8px 0 0 6px;padding-left:18px}
+.tl div{margin:0 0 14px;position:relative}
+.tl div:before{content:"";position:absolute;left:-25px;top:8px;width:10px;height:10px;border-radius:50%;background:var(--ac)}
+.tl b{display:block}.tl span{color:var(--mut);font-size:15px}
+.shot{margin:0 0 18px}.shot img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line);display:block}
+.shot figcaption{color:var(--mut);font-size:14px;margin-top:6px}
+.cta{border:1px solid var(--ac);border-radius:14px;padding:18px;background:var(--card)}
+.cta ol{margin:8px 0 12px 18px;padding:0;color:var(--mut)}
+.cta li{margin:4px 0}
 </style>
 </head>
 <body>
@@ -45,15 +54,73 @@ a{color:var(--ac)}
 <header>
 <img class="foto" src="/perfil.jpg" alt="Wellington Gois" width="104" height="104">
 <div class="tag">Codall &middot; engenharia de dados</div>
-<h1>Plataforma Viva em Dados</h1>
-<p class="l">Uma plataforma de dados constru&iacute;da sobre cinco produtos reais que j&aacute; est&atilde;o no ar, orquestrada com Airflow e operada por um agente de IA (o Codall) sob auditoria. O foco &eacute; o que vem depois do deploy: agendamento, qualidade, linhagem, incidentes e custo.</p>
-<a class="btn p" href="https://github.com/wellgois/codall-plataforma-viva">Ver o c&oacute;digo no GitHub</a>
+<h1>Quem &eacute; o fundador do Codall</h1>
+<p class="l">Sou Wellington Gois, engenheiro de dados e professor de Matem&aacute;tica no Rio de Janeiro. Depois de mais de 20 anos na ind&uacute;stria, troquei o ch&atilde;o de f&aacute;brica por dados, ensino e software. O Codall nasceu da necessidade de cuidar sozinho de v&aacute;rios projetos no ar, pelo celular.</p>
+<a class="btn p" href="#avalie">Avalie meu perfil para a sua vaga</a>
+<a class="btn" href="/curriculo.html">Curr&iacute;culo verific&aacute;vel</a>
+<a class="btn" href="https://github.com/wellgois/codall-plataforma-viva">GitHub</a>
+<a class="btn" href="https://linkedin.com/in/wellingtongois">LinkedIn</a>
+</header>
+
+<section>
+<h2>Minha trajet&oacute;ria</h2>
+<div class="tl">
+<div><b>Ind&uacute;stria, mais de 20 anos</b><span>Tecn&oacute;logo em Mec&acirc;nica (CEFET/RJ). Contratos com a Petrobras, com uso intenso de SAP nos m&oacute;dulos de materiais e manuten&ccedil;&atilde;o (MM e PM). Foi ali que aprendi o que &eacute; dado que sustenta uma opera&ccedil;&atilde;o: cadastro limpo, rastreio e custo.</span></div>
+<div><b>Sala de aula</b><span>Licenciatura em Matem&aacute;tica e especializa&ccedil;&atilde;o em Matem&aacute;tica Financeira e Estat&iacute;stica. Professor de Matem&aacute;tica na rede p&uacute;blica do Rio de Janeiro desde 2025 (antes, em Belford Roxo). Explicar para quem n&atilde;o sabe &eacute; parte do m&eacute;todo.</span></div>
+<div><b>Produtos pr&oacute;prios no ar</b><span>Constru&iacute; e opero sozinho o euprofessor.site (assistente pedag&oacute;gico com IA para professores) e o jogandologica.site (jogos de racioc&iacute;nio para alunos), al&eacute;m de outros apps. Passei a ter usu&aacute;rios reais, erros reais e custo real.</span></div>
+<div><b>Forma&ccedil;&atilde;o em dados</b><span>MBA em Gest&atilde;o de Projetos e p&oacute;s-gradua&ccedil;&atilde;o em Engenharia de Dados e IA (em andamento).</span></div>
+<div><b>Codall</b><span>Com v&aacute;rios projetos no mesmo servidor e s&oacute; o celular nas m&atilde;os durante o dia de trabalho, o terminal comum caía toda hora. Criei o meu pr&oacute;prio painel, depois um agente que opera o servidor, e hoje ele &eacute; a base da Plataforma Viva em Dados, abaixo.</span></div>
+</div>
+</section>
+
+<section>
+<h2>O que &eacute; o Codall</h2>
+<p class="l">Um painel web para gerenciar, pelo celular, todos os projetos que rodam no meu servidor (VPS). Ele junta terminal, chat com agente de IA, monitoramento de erros e an&aacute;lise de dados em um s&oacute; lugar. A finalidade &eacute; simples: manter v&aacute;rios produtos no ar com uma &uacute;nica pessoa, e deixar tudo auditado.</p>
+<div class="grid" style="margin-top:12px">
+<div class="c"><b>Terminal e chat</b><span>Terminal do servidor no navegador e um agente de IA que prop&otilde;e comandos (modo manual) ou executa sozinho (modo autom&aacute;tico), com confirma&ccedil;&atilde;o para o que &eacute; perigoso.</span></div>
+<div class="c"><b>Vigia de erros</b><span>Recolhe os erros de todos os projetos, diagnostica, corrige com backup e reverte sozinho se piorar, e avisa pelo Telegram.</span></div>
+<div class="c"><b>Mem&oacute;ria e aprendizado</b><span>Guarda li&ccedil;&otilde;es de cada incidente e um atlas dos projetos. O aprendizado &eacute; medido em n&uacute;meros, n&atilde;o por impress&atilde;o.</span></div>
+<div class="c"><b>BI e Governan&ccedil;a</b><span>Pain&eacute;is sobre os dados que os pr&oacute;prios projetos geram e o invent&aacute;rio de ativos de dados, com dono e classifica&ccedil;&atilde;o.</span></div>
+</div>
+</section>
+
+<section>
+<h2>Como ele &eacute; por dentro</h2>
+<div class="grid">
+<div class="c"><b>Aplica&ccedil;&atilde;o</b><span>Node.js em um processo gerenciado pelo pm2, com sess&otilde;es em SQLite e o terminal ligado a uma sess&atilde;o tmux que sobrevive a quedas de conex&atilde;o.</span></div>
+<div class="c"><b>IA</b><span>Modelo DeepSeek, escolhido pelo custo baixo, com um segundo agente revisor antes de concluir tarefas.</span></div>
+<div class="c"><b>Seguran&ccedil;a</b><span>Cofre de chaves com mascaramento na sa&iacute;da, trava contra vazamento de segredos e um port&atilde;o para reinicializa&ccedil;&otilde;es, com checagem pr&eacute;via, revis&atilde;o e teste de fuma&ccedil;a.</span></div>
+<div class="c"><b>Dados</b><span>Lakehouse com Airflow, dbt, DuckDB e Redpanda alimentado pelos produtos reais. O Spark confere os resultados do dbt e o Terraform sobe a mesma infraestrutura na AWS e na Azure.</span></div>
+</div>
+</section>
+
+<section>
+<h2>Telas do Codall</h2>
+<p class="l">Capturas reais do painel, feitas em 12/11/2026. Mostram apenas contagens e categorias, sem conte&uacute;do de usu&aacute;rios.</p>
+<figure class="shot" style="margin-top:12px"><img src="/vitrine-img/bi-codall.jpg" alt="Painel BI do Codall com atividade por projeto e por fonte de dados" loading="lazy"><figcaption><b>BI:</b> atividade por projeto, por fonte e por dia, com filtros e exporta&ccedil;&atilde;o em CSV.</figcaption></figure>
+<figure class="shot"><img src="/vitrine-img/governanca-codall.jpg" alt="Painel de Governan&ccedil;a de dados do Codall com ativos por projeto e cobertura de classifica&ccedil;&atilde;o" loading="lazy"><figcaption><b>Governan&ccedil;a:</b> 59 ativos de dados inventariados por projeto. A cobertura de dono e classifica&ccedil;&atilde;o ainda &eacute; baixa (2%) e est&aacute; sendo ampliada; mostro o n&uacute;mero como est&aacute;.</figcaption></figure>
+</section>
+
+<section id="avalie">
+<h2>Avalie meu perfil para a sua vaga</h2>
+<div class="cta">
+<p class="l" style="margin:0">Voc&ecirc; est&aacute; avaliando o perfil de <b>Wellington Gois como Engenheiro de Dados</b> para a sua empresa. A ferramenta compara a sua vaga com o que eu realmente comprovo neste portf&oacute;lio.</p>
+<ol>
+<li>Cole os requisitos da sua vaga.</li>
+<li>Ela identifica as tecnologias pedidas.</li>
+<li>Para cada uma, mostra se eu tenho <b>prova</b> (c&oacute;digo ou teste que voc&ecirc; confere), <b>prova parcial</b> ou <b>nenhuma prova</b>, dito de forma direta.</li>
+</ol>
+<a class="btn p" href="/radar.html#cole">Colar a minha vaga</a>
+<p class="l" style="font-size:14px;margin-top:10px">A an&aacute;lise roda no seu navegador: o texto da vaga n&atilde;o &eacute; enviado nem guardado.</p>
+</div>
+</section>
+
+<section style="border-top:0;padding-bottom:0">
+<h2>A prova em dados: Plataforma Viva</h2>
+<p class="l">O Codall opera uma plataforma de dados constru&iacute;da sobre cinco produtos reais. O foco &eacute; o que vem depois do deploy: agendamento, qualidade, linhagem, incidentes e custo.</p>
 <a class="btn" href="/confiabilidade.html">Confiabilidade ao vivo</a>
 <a class="btn" href="/radar.html">Radar do mercado</a>
-<a class="btn" href="/radar.html#cole">Teste com a sua vaga</a>
-<a class="btn" href="/curriculo.html">Curr&iacute;culo verific&aacute;vel</a>
-<a class="btn" href="https://linkedin.com/in/wellingtongois">Wellington Gois no LinkedIn</a>
-</header>
+</section>
 
 <section>
 <h2>Estado do projeto</h2>
