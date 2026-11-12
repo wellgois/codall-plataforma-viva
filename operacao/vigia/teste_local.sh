@@ -32,4 +32,16 @@ ID=$(basename $(ls $T/erros/propostas/*.json) .json)
 python3 aplicar.py "$ID" | tee $T/saida5.txt
 grep -q "Array.isArray" $T/src/test.ts
 ls $T/src/test.ts.bak-vigia-* >/dev/null
+# reincidencia: o mesmo erro volta; a licao e reaproveitada (sem 2a chamada da IA) e o livro registra
+cp $T/src/test.ts.bak-vigia-* $T/src/test.ts
+python3 -c "import json,sys;p=sys.argv[1]+'/erros/estado.json';d=json.load(open(p));d['assinaturas']={};json.dump(d,open(p,'w'))" $T
+python3 - "$T" <<'P'
+import json,sys
+json.dump([{"resumo":"Voltou.","causa_provavel":"Mesmo gabarito.","gravidade":"alta","tipo":"codigo","termo_busca":"x","acao_segura":"nenhuma"}],open(sys.argv[1]+"/llm.json","w"))
+P
+printf '%s\n' '{"level":"error","message":"Job 441 falhou: (data.gabarito || questoes).map is not a function"}' >> $T/logs/appteste-error.log
+python3 coletor.py | grep -q "1 incidente"
+python3 vigia.py --uma-vez | grep -q "tratados: 1"
+grep -q "reaproveitada\|ATENCAO" $T/erros/relatorios/*.md
+python3 aprendizado.py | grep -q "Acumulado: 2 incidentes"
 echo "TESTE DO VIGIA: PASSOU"

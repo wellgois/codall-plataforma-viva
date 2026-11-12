@@ -107,6 +107,22 @@ def buscar_codigo(raiz, termo):
     return "\n\n".join(partes)[:6000]
 
 
+def reaproveitar(inc, licao):
+    """Se ja resolvemos este mesmo erro antes, reaproveita a correcao sem chamar a IA."""
+    p = (licao or {}).get("proposta")
+    if not p:
+        return None
+    try:
+        atual = Path(p["arquivo"]).read_text()
+    except Exception:
+        return None
+    if atual.count(p["antes"]) != 1:
+        return None
+    p = dict(p, id=inc["id"], fonte=inc["fonte"], assinatura=inc.get("assinatura", ""))
+    c.gravar_json(c.PROPOSTAS / (inc["id"] + ".json"), p)
+    return p
+
+
 def propor_correcao(inc, termo, raiz):
     contexto = buscar_codigo(raiz, termo)
     if not contexto:
@@ -121,7 +137,7 @@ def propor_correcao(inc, termo, raiz):
         return None
     if atual.count(r["antes"]) != 1 or r.get("depois") == r["antes"]:
         return None
-    r["id"], r["fonte"] = inc["id"], inc["fonte"]
+    r["id"], r["fonte"], r["assinatura"] = inc["id"], inc["fonte"], inc.get("assinatura", "")
     c.gravar_json(c.PROPOSTAS / (inc["id"] + ".json"), r)
     return r
 
@@ -136,6 +152,7 @@ def tratar(inc, cfg, estado):
     fonte = inc["fonte"]
     fc = fonte_cfg(cfg, fonte)
     nome = fc.get("nome", fonte)
+    licao = c.ler_json(c.LICOES, {}).get(inc.get("assinatura", ""))
     r = llm(SIS1, f"APP: {nome}\nLOG:\n{inc['trecho'][:2500]}")
     ia = r is not None
     r = r or {"resumo": "Erro registrado nos logs (sem diagnostico de IA disponivel).",
@@ -153,12 +170,25 @@ def tratar(inc, cfg, estado):
         else:
             acao = "Reinicio ja feito 2x na ultima hora; nao repeti. Precisa de atencao humana."
     elif r.get("tipo") == "codigo" and fc.get("codigo"):
-        proposta = propor_correcao(inc, r.get("termo_busca", ""), fc["codigo"])
+        proposta = reaproveitar(inc, licao) or propor_correcao(inc, r.get("termo_busca", ""), fc["codigo"])
         if proposta:
             acao = ("Correcao de codigo PREPARADA (nao aplicada: app em producao). "
                     "Para aplicar com backup e reversao automatica:\n  python3 /opt/plataforma-viva/operacao/vigia/aplicar.py " + inc["id"])
         else:
             acao = "Defeito de codigo, mas nao consegui montar correcao segura. Precisa de revisao."
+    ant = [e for e in c.ler_livro() if e.get("tipo") == "incidente" and e.get("assinatura") == inc.get("assinatura")]
+    reinc = bool(ant)
+    aplicada_antes = bool(licao and licao.get("aplicada_em"))
+    c.registrar({"tipo": "incidente", "id": inc["id"], "fonte": fonte, "assinatura": inc.get("assinatura", ""),
+                 "ia": ia, "classe": r.get("tipo"), "gravidade": r.get("gravidade"),
+                 "reincidente": reinc, "correcao_anterior_falhou": reinc and aplicada_antes,
+                 "licao_reutilizada": bool(proposta and licao and licao.get("proposta")),
+                 "acao": "reinicio" if acao.startswith("Reiniciado") else ("proposta" if proposta else "nenhuma"),
+                 "reiniciou_ok": acao.startswith("Reiniciado") and "voltou a funcionar" in acao})
+    if reinc and aplicada_antes:
+        acao += f"\nATENCAO: este erro ja tinha sido corrigido em {licao['aplicada_em']} e voltou. A correcao anterior nao resolveu a causa."
+    elif licao and licao.get("proposta") and proposta:
+        acao += "\n(Correcao reaproveitada de um incidente anterior igual.)"
     return nome, r, acao, proposta, ia
 
 

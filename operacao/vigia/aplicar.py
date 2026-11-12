@@ -31,8 +31,15 @@ def main(pid):
     if rc != 0 or run.strip() != "true":
         arq.write_text(original)
         sh(deploy)
+        c.registrar({"tipo": "revertida", "id": pid, "fonte": p["fonte"], "assinatura": p.get("assinatura", "")})
         c.telegram(f"↩️ Correcao {pid} revertida: o deploy falhou ({out[-200:]}). Backup em {bak}.")
         sys.exit("revertido")
+    c.registrar({"tipo": "aplicada", "id": pid, "fonte": p["fonte"], "assinatura": p.get("assinatura", "")})
+    if p.get("assinatura"):
+        lic = c.ler_json(c.LICOES, {})
+        lic[p["assinatura"]] = {"proposta": {k: p[k] for k in ("arquivo", "antes", "depois", "explicacao") if k in p},
+                                "aplicada_em": pid, "fonte": p["fonte"]}
+        c.gravar_json(c.LICOES, lic)
     c.telegram(f"✅ Correcao {pid} aplicada em {p['fonte']}: {p.get('explicacao','')}\nBackup: {bak}")
     print("aplicado; backup em", bak)
 

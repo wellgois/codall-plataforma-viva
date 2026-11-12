@@ -6,6 +6,7 @@ BASE = Path(os.environ.get("ERROS_DIR", "/opt/erros"))
 ENTRADA, PROCESSADOS = BASE / "entrada", BASE / "processados"
 RELATORIOS, PROPOSTAS = BASE / "relatorios", BASE / "propostas"
 ESTADO = BASE / "estado.json"
+LIVRO, LICOES = BASE / "aprendizado.jsonl", BASE / "licoes.json"
 ALERTA = Path(os.environ.get("VIGIA_ALERTA", "/opt/plataforma-viva/.alerta"))
 FONTES = Path(os.environ.get("VIGIA_FONTES", str(Path(__file__).with_name("fontes.json"))))
 
@@ -82,3 +83,24 @@ def telegram(texto):
 
 def agora():
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+
+def registrar(evento):
+    """Anexa um evento ao livro de aprendizado (uma linha JSON por evento)."""
+    evento = dict(evento, ts=time.time(), quando=agora())
+    BASE.mkdir(parents=True, exist_ok=True)
+    with open(LIVRO, "a") as f:
+        f.write(json.dumps(evento, ensure_ascii=False) + "\n")
+
+
+def ler_livro():
+    out = []
+    try:
+        for l in LIVRO.read_text().splitlines():
+            try:
+                out.append(json.loads(l))
+            except Exception:
+                pass
+    except Exception:
+        pass
+    return out
