@@ -10,8 +10,10 @@ const OUT = path.join(CODALL, 'data/regressao.jsonl');
 const USD_POR_MTOK = 0.18;
 
 function codigo(texto) {
-  const m = texto.match(/```(?:python|py)?\s*\n([\s\S]*?)```/);
-  return (m ? m[1] : texto).trim() + '\n';
+  // o servico de IA do Codall usa um prompt de agente; escolher o bloco que define a funcao
+  const blocos = [...texto.matchAll(/```[a-zA-Z]*\s*\n([\s\S]*?)```/g)].map(m => m[1]);
+  const b = blocos.find(x => /^\s*def\s+\w+\(/m.test(x) && !/^\s*python3\s+-c/m.test(x)) || blocos[0] || texto;
+  return b.trim() + '\n';
 }
 async function perguntar(prompt) {
   const msgs = [{ role: 'user', content: prompt }];
