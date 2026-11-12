@@ -1,1 +1,7 @@
 data,par,condicao,acertou,rodadas,falhas,tokens
+2026-11-12,T1-csv-pandas,sem-par,acertou,1,0,~99k
+2026-11-12,T2-dbt-duckdb,sem-par,acertou,1,0,~190k
+2026-11-12,T3-etl-idempotente,sem-par,acertou,1,0,~280k
+2026-11-12,P1-logs-jogandologica,B,inconclusivo(journal vazio),3,0,35k
+2026-11-12,P2-sqlite-jogandologica,B,acertou,1,0,15k
+2026-11-12,P2-sqlite-jogandologica,A,acertou,1,0,16k
