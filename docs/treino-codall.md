@@ -32,3 +32,9 @@ Cada tarefa tem criterio objetivo (saida real, `diff`, teste que passa/falha). "
 
 ## Registro
 Resultados por rodada em `docs/treino-resultados.csv` (colunas: data, par, condicao A/B, acertou, rodadas, falhas, tokens).
+
+## Resultado da primeira rodada (12/11/2026)
+- Currículo: as 10 tarefas foram cumpridas (criterio objetivo atendido em todas).
+- Pares A/B (9 validos; o par 1 foi inconclusivo): A melhor em 2 (P7, P8), B melhor em 2 (P6, P10), empate em 5 (P2, P3, P4, P5, P9). Teste dos sinais: sem diferenca (p=1).
+- Leitura: licoes sobre fatos faceis de descobrir (nomes de container, caminho do banco) nao mudam nada. Onde a licao muda o comportamento (P8: baseline Dummy) ou corta passos (P7: 51k contra 179k tokens), o ganho aparece, mas a amostra e pequena e uma rodada A teve parada indevida (P8). Conclusao: nao ha evidencia suficiente, nem a favor nem contra.
+- Ressalva: B sempre rodou na mesma conversa do painel, sem sorteio de ordem estrito; custo total do treino abaixo de US$ 0,60.

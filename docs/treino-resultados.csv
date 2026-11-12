@@ -5,3 +5,27 @@ data,par,condicao,acertou,rodadas,falhas,tokens
 2026-11-12,P1-logs-jogandologica,B,inconclusivo(journal vazio),3,0,35k
 2026-11-12,P2-sqlite-jogandologica,B,acertou,1,0,15k
 2026-11-12,P2-sqlite-jogandologica,A,acertou,1,0,16k
+2026-11-12,T4-dag-airflow,sem-par,acertou,2,0,46k
+2026-11-12,T5-sklearn-treino-teste,sem-par,acertou,1,0,38k
+2026-11-12,T6-desbalanceado,sem-par,acertou,4,3 intermediarias,113k
+2026-11-12,T7-data-leakage,sem-par,acertou,4,3 intermediarias,106k
+2026-11-12,T8-mini-rag,sem-par,acertou,4,4 intermediarias,98k
+2026-11-12,T9-contrato-dados,sem-par,acertou,6,varias intermediarias,155k
+2026-11-12,T10-diagnostico-pool,sem-par,acertou,4,4 intermediarias,97k
+2026-11-12,P3-logs-wellgois,A,acertou,1,0,13k
+2026-11-12,P3-logs-wellgois,B,acertou,1,0,13k
+2026-11-12,P4-containers-wellgois,B,acertou,1,0,15k
+2026-11-12,P4-containers-wellgois,A,acertou,1,0,15k
+2026-11-12,P5-containers-meuingles,A,acertou,1,0,14k
+2026-11-12,P5-containers-meuingles,B,acertou,1,0,13k
+2026-11-12,P6-dbt-profiles,A,acertou,3,1,90k
+2026-11-12,P6-dbt-profiles,B,acertou,3,0,79k
+2026-11-12,P7-airflow-sem-pacote,B,acertou,6,0,179k
+2026-11-12,P7-airflow-sem-pacote,A,acertou,2,1,51k
+2026-11-12,P8-desbalanceado-baseline,A,parou apos o plano (repetida),0,0,7k
+2026-11-12,P8-desbalanceado-baseline,A2,acertou com baseline,2,0,54k
+2026-11-12,P8-desbalanceado-baseline,B,acertou sem baseline,5,0,90k
+2026-11-12,P9-grep-seta,B,acertou,1,0,19k
+2026-11-12,P9-grep-seta,A,acertou,1,0,21k
+2026-11-12,P10-nginx-add_header,A,acertou,4,0,88k
+2026-11-12,P10-nginx-add_header,B,acertou,3,0,45k
