@@ -51,7 +51,7 @@ flowchart LR
 | Nuvem e BI | Terraform (S3, Glue, Athena, Budgets) e Power BI |
 | CI | GitHub Actions: segredos, higiene, privacidade, Terraform, quickstart |
 
-Spark, Delta Lake e OpenLineage foram considerados e **nao** foram construidos: [ADR 0006](docs/decisoes/0006-escopo-real-da-stack.md).
+Delta Lake e OpenLineage foram considerados e **nao** foram construidos ([ADR 0006](docs/decisoes/0006-escopo-real-da-stack.md)). O Spark existe so em modo local, como prova de equivalencia contra o dbt, sem substituir o DuckDB ([ADR 0008](docs/decisoes/0008-spark-conferido-contra-dbt.md)).
 
 ## O que ja foi provado
 
