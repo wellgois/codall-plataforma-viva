@@ -61,7 +61,7 @@ Delta Lake e OpenLineage foram considerados e **nao** foram construidos ([ADR 00
 | 2. Confiabilidade | falha injetada detectada e alertada | detectada e recuperada em ciclo de 5 min (11/11) |
 | 3. Streaming | evento chega ao gold em ate 2 min; reprocessar nao duplica | 72 s; reenvio e reprocesso mantiveram 1 linha |
 | 4. Vitrine | nenhum dado pessoal exposto | auditoria automatica no CI e antes de publicar |
-| 5. Nuvem e BI | criar e destruir e reproduzivel | 2 ciclos de 9 recursos em AWS simulada; Athena e Budgets so validados |
+| 5. Nuvem e BI | criar e destruir e reproduzivel | 2 ciclos de 9 recursos em AWS simulada; depois na conta AWS real: 11 recursos, 2 ciclos, consulta no Athena ok |
 | 6. Lancamento | clonar e subir em maquina limpa em menos de 15 min | 98 s no GitHub Actions (11/11); workflow quickstart repete a cada mudanca |
 
 Detalhes e limites em [docs/ROADMAP.md](docs/ROADMAP.md) e nas [decisoes](docs/decisoes).
