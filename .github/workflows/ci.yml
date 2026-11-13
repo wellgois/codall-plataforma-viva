@@ -93,3 +93,15 @@ jobs:
           (azurite-blob --silent --location /tmp/az --skipApiVersionCheck &)
           for i in $(seq 1 40); do (echo > /dev/tcp/127.0.0.1/10000) 2>/dev/null && break; sleep 2; done
           AZURE_STORAGE_CONNECTION_STRING="UseDevelopmentStorage=true" python infra/terraform-azure/teste-azurite.py /tmp/gold
+  gcp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform GCP fmt e validate
+        working-directory: infra/terraform-gcp
+        run: |
+          terraform fmt -check -recursive
+          terraform init -backend=false
+          terraform validate
