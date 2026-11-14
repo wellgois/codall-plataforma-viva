@@ -8,7 +8,7 @@ const ai = require(path.join(CODALL, 'src/services/aiProvider.js'));
 const tarefas = require('./tarefas.js');
 let perguntas = require('./perguntas.js');
 try { perguntas = perguntas.concat(JSON.parse(fs.readFileSync(path.join(__dirname, 'perguntas-gerado.json'), 'utf8'))); } catch (e) {}
-const OUT = path.join(CODALL, 'data/regressao.jsonl');
+const OUT = process.env.OUT || path.join(CODALL, 'data/regressao.jsonl'); // OUT=/tmp/x.jsonl roda como teste, sem tocar nos resultados
 const TOTAL = parseInt(process.env.TOTAL || '500', 10);
 
 function hash(str) { let h = 2166136261; for (const c of str) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
