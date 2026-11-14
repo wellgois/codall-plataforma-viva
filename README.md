@@ -57,7 +57,7 @@ Delta Lake e OpenLineage foram considerados e **nao** foram construidos ([ADR 00
 
 | Fase | Teste de aceite | Resultado |
 | --- | --- | --- |
-| 1. Lakehouse | 3 execucoes diarias seguidas sem intervencao | rodando; aceite previsto para 13/11 |
+| 1. Lakehouse | 3 execucoes diarias seguidas sem intervencao | aceite passou em 14/11: 4 execucoes diarias seguidas com sucesso (10 a 13/11) |
 | 2. Confiabilidade | falha injetada detectada e alertada | detectada e recuperada em ciclo de 5 min (11/11) |
 | 3. Streaming | evento chega ao gold em ate 2 min; reprocessar nao duplica | 72 s; reenvio e reprocesso mantiveram 1 linha |
 | 4. Vitrine | nenhum dado pessoal exposto | auditoria automatica no CI e antes de publicar |
