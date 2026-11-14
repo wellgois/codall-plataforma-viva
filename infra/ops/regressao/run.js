@@ -52,7 +52,7 @@ async function perguntar(prompt) {
   const lista = [...codigoTarefas.map(t => ({ tipo: 'codigo', t })), ...perguntasDoDia(dia, nPerg).map(p => ({ tipo: 'mcq', p }))];
   for (const it of lista) {
     n++;
-    const t0 = Date.now(); let resp = '', erro = null, passou = false, saida = '', prompt = '', meta;
+    const t0 = Date.now(); let reenvio = false, resp = '', erro = null, passou = false, saida = '', prompt = '', meta;
     try {
       if (it.tipo === 'codigo') {
         const t = it.t; meta = { id: t.id, nome: t.nome, assunto: t.assunto };
@@ -69,13 +69,21 @@ async function perguntar(prompt) {
         prompt = `Pergunta de multipla escolha (estilo certificacao). Responda sem executar comandos. Termine com uma unica linha "RESPOSTA: X", onde X e A, B, C ou D.\n\n${p.q}\n` + p.alts.map((a, i) => `${'ABCD'[i]}) ${a}`).join('\n');
         resp = await perguntar(prompt);
         const ms = [...resp.matchAll(/RESPOSTA:\s*\**\s*([A-D])\b/gi)];
-        const dada = ms.length ? ms[ms.length - 1][1].toUpperCase() : null;
+        let dada = ms.length ? ms[ms.length - 1][1].toUpperCase() : null;
+        if (!dada) { // falha de formato: pede de novo so a letra, uma vez
+          try {
+            const r2 = await perguntar(prompt + '\n\nA resposta anterior nao terminou com a linha pedida. Responda SOMENTE com a linha "RESPOSTA: X" (X = A, B, C ou D), sem mais nada.');
+            const m2 = [...r2.matchAll(/RESPOSTA:\s*\**\s*([A-D])\b/gi)];
+            if (m2.length) dada = m2[m2.length - 1][1].toUpperCase();
+            resp += r2; reenvio = true;
+          } catch (e) {}
+        }
         passou = dada === p.gabarito; saida = passou ? '' : `deu ${dada || 'nenhuma'}, gabarito ${p.gabarito}`;
       }
     } catch (e) { erro = String(e.message || e).slice(0, 200); }
     const tokens = Math.round((prompt.length + resp.length) / 3.5);
     const linha = { lote, dia, tipo: it.tipo, ...meta, passou, ms: Date.now() - t0,
-      tokens_estimados: tokens, custo_usd_estimado: +(tokens * USD_POR_MTOK / 1e6).toFixed(6), erro, saida: passou ? '' : saida };
+      tokens_estimados: tokens, custo_usd_estimado: +(tokens * USD_POR_MTOK / 1e6).toFixed(6), erro, saida: passou ? '' : saida, ...(reenvio ? { reenvio } : {}) };
     fs.appendFileSync(OUT, JSON.stringify(linha) + '\n');
     if (passou) ok++;
     console.log((passou ? 'OK  ' : 'FALHA ') + meta.id + ' ' + meta.nome.slice(0, 40));

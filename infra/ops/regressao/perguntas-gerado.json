@@ -4049,11 +4049,11 @@
  ],
  [
   "PostgreSQL",
-  "Em relação a constraint triggers e eventos de integridade referencial, qual é a diferença entre eventos AFTER e DEFERRABLE no PostgreSQL?",
-  "Constraints DEFERRABLE podem ser verificadas no fim da transação, enquanto AFTER dispara por linha/instrução imediatamente após a operação.",
-  "Constraints AFTER DEFERRABLE executam relógio de transação em modo read-only por padrão.",
-  "Constraints DEFERRABLE só podem ser configuradas para chaves estrangeiras em nível de tabela.",
-  "Constraints AFTER e DEFERRABLE são sinônimos quando o trigger é do tipo ROW e FOR EACH STATEMENT."
+  "Em PostgreSQL, o que muda ao declarar uma restrição de chave estrangeira como DEFERRABLE INITIALLY DEFERRED?",
+  "A verificação ocorre no COMMIT em vez de a cada comando, permitindo violações temporárias dentro da transação",
+  "A restrição deixa de ser verificada e passa a funcionar apenas como documentação",
+  "A verificação passa a ocorrer em segundo plano, de forma assíncrona, depois do COMMIT",
+  "A restrição só é verificada em DELETE, nunca em INSERT ou UPDATE"
  ],
  [
   "PostgreSQL",
@@ -4161,19 +4161,19 @@
  ],
  [
   "PostgreSQL",
-  "Qual extensão built-in do PostgreSQL permite consultar comandos DDL executados via event triggers e inspecionar o momento (ddl_command_start ou ddl_command_end) em que disparam?",
-  "A funcionalidade de event triggers nativa, com funções de evento que retornam event_trigger",
-  "A extensão pg_ddl_audit com seu módulo principal",
-  "O catálogo pg_audit_log consultado via SQL regular",
-  "A extensão dblink usando gatilho de DDL remoto"
+  "Qual recurso do PostgreSQL permite executar uma função automaticamente quando um comando DDL, como CREATE TABLE, é executado?",
+  "Event triggers (CREATE EVENT TRIGGER), com eventos como ddl_command_start e ddl_command_end",
+  "Triggers de tabela FOR EACH STATEMENT, criados com CREATE TRIGGER",
+  "Regras (CREATE RULE) definidas sobre o catálogo pg_class",
+  "O parâmetro log_statement, que executa funções ao registrar comandos DDL"
  ],
  [
   "PostgreSQL",
-  "Qual mecanismo permite que uma consulta PostgreSQL seja executada em paralelo pelos workers e exige que a tabela alvo satisfaça certas condições?",
-  "Parallel query exige que a tabela acessada seja particionada ou que a varredura possa ser executada em paralelo pelo planner",
-  "Parallel query depende exclusivamente do tipo heap usado na tabela",
-  "Parallel query só ocorre em consultas que usam índice btree",
-  "Parallel query requer que a tabela seja UNLOGGED para paralelizar"
+  "Qual condição impede o planejador do PostgreSQL de usar um plano de consulta paralela?",
+  "A consulta chamar uma função marcada como PARALLEL UNSAFE",
+  "A tabela consultada não estar particionada",
+  "A consulta conter uma cláusula WHERE",
+  "O parâmetro work_mem estar definido acima de 64 MB"
  ],
  [
   "PostgreSQL",
@@ -4193,11 +4193,11 @@
  ],
  [
   "PostgreSQL",
-  "Qual operador/construção permite usar um índice GiST de forma que a consulta encontre linhas onde um elemento é igual a qualquer valor de um array, usando a indexação R-tree-like?",
-  "O operador && (overlap entre arrays) quando a coluna é de tipo array com índice GiST",
-  "O operador @> usado com índice btree simples",
-  "O operador LIKE com índice hash",
-  "O operador BETWEEN em índice spgist"
+  "Qual tipo de índice do PostgreSQL é indicado para acelerar buscas de contenção ou sobreposição em colunas de array, como col @> ARRAY[1,2] ou col && ARRAY[1,2]?",
+  "GIN",
+  "BRIN",
+  "Hash",
+  "B-tree"
  ],
  [
   "PostgreSQL",
@@ -4217,11 +4217,11 @@
  ],
  [
   "PostgreSQL",
-  "Sobre o parse de um documento JSONB contendo a chave \"k\" com valor null em armazenamento, qual é a diferença entre SELECT col->'k' IS NULL e NOT (col ? 'k')?",
-  "O primeiro retorna true mesmo quando a chave existe com valor JSON null; o segundo também é true, mas por motivo distinto (cláusula key-existence)",
-  "O primeiro retorna true e o segundo retorna false, pois ? não considera null",
-  "Ambos retornam false quando a chave existe com valor null",
-  "O primeiro retorna false e o segundo true, pois o operador ? ignora null"
+  "Em um documento jsonb em que a chave \"k\" existe com valor JSON null, o que retornam as expressões col->'k' IS NULL e NOT (col ? 'k')?",
+  "Ambas retornam false, pois col->'k' devolve o jsonb null (que não é SQL NULL) e o operador ? encontra a chave",
+  "A primeira retorna true e a segunda retorna false",
+  "A primeira retorna false e a segunda retorna true",
+  "Ambas retornam true, pois o valor da chave é nulo"
  ],
  [
   "Qualidade e contratos de dados",
