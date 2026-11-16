@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.bak-*
+*.bak
+*.tmp
+*.log
+*.tar.gz
+*.zip
+*.xlsx
+*.csv
+.env
+.env.*
+.DS_Store
