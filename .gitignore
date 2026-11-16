@@ -27,3 +27,10 @@ estado-monitor.json
 *.auto.tfvars
 *.tfstate*
 infra/terraform/.tmp-teste/
+
+# dados de projetos nunca vao ao GitHub
+projetos/**/out/
+projetos/**/*.xlsx
+projetos/**/*.xls
+projetos/**/*.csv
+*.bak*
