@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JogandoLógica · Dashboard de KPIs</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --tx:#1d2330; --mut:#5d6677; --bd:#e2e5ea;
+          --c1:#2a6fdb; --c2:#e8890c; --c3:#1c9c6b; --c4:#8a5cc7; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#12151c; --card:#1b2029; --tx:#e8ebf1; --mut:#9aa3b5; --bd:#2b3240;
+            --c1:#5b9bff; --c2:#f0a233; --c3:#3ccf94; --c4:#b28aef; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--tx); }
+  main { max-width:1040px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  h2 { font-size:15px; margin:0 0 12px; }
+  .sub { color:var(--mut); margin:0 0 20px; font-size:13px; }
+  .grid { display:grid; gap:14px; }
+  .kpis { grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); margin-bottom:14px; }
+  .two { grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); }
+  .card { background:var(--card); border:1px solid var(--bd); border-radius:10px; padding:16px; }
+  .kpi b { display:block; font-size:28px; line-height:1.2; }
+  .kpi span { color:var(--mut); font-size:13px; }
+  svg { width:100%; height:auto; display:block; }
+  svg text { fill:var(--mut); font-size:11px; }
+  .legend { display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; font-size:12px; color:var(--mut); }
+  .legend i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th,td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--bd); }
+  th { color:var(--mut); font-weight:600; }
+  td.n, th.n { text-align:right; font-variant-numeric:tabular-nums; }
+  ul.ins { margin:0; padding-left:18px; } ul.ins li { margin:4px 0; }
+  footer { color:var(--mut); font-size:12px; margin-top:20px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>JogandoLógica · KPIs de engajamento</h1>
+  <p class="sub" id="sub"></p>
+  <div class="grid kpis" id="kpis"></div>
+  <div class="grid two">
+    <section class="card"><h2>Atividades por mês e tipo</h2><div id="c-mensal"></div><div class="legend" id="l-mensal"></div></section>
+    <section class="card"><h2>Participantes ativos por mês</h2><div id="c-part"></div></section>
+    <section class="card"><h2>Taxa de acerto por tipo de atividade (%)</h2><div id="c-acerto"></div></section>
+    <section class="card"><h2>Atividades por dia da semana</h2><div id="c-semana"></div></section>
+  </div>
+  <section class="card" style="margin-top:14px"><h2>Jogos mais jogados (sessões)</h2><div id="t-jogos"></div></section>
+  <section class="card" style="margin-top:14px"><h2>Leituras automáticas dos dados</h2><ul class="ins" id="ins"></ul></section>
+  <footer>Dados agregados do banco do JogandoLógica, sem nenhuma informação pessoal de aluno. Retrato estático gerado em <span id="gen"></span>. Veja o README da pasta para método, decisões e limites.</footer>
+</main>
+<script id="dados" type="application/json">{"gerado_em": "2026-11-18T11:09Z", "resumo": {"atividades": 8417, "participantes": 513, "inicio": "2026-04-27", "fim": "2026-11-17"}, "mensal": [{"mes": "2026-04", "tipo": "logika", "atividades": 795, "participantes": 199}, {"mes": "2026-04", "tipo": "sessao", "atividades": 26, "participantes": 8}, {"mes": "2026-05", "tipo": "logika", "atividades": 612, "participantes": 208}, {"mes": "2026-05", "tipo": "sessao", "atividades": 468, "participantes": 29}, {"mes": "2026-06", "tipo": "logika", "atividades": 415, "participantes": 207}, {"mes": "2026-06", "tipo": "sessao", "atividades": 111, "participantes": 17}, {"mes": "2026-07", "tipo": "logika", "atividades": 210, "participantes": 207}, {"mes": "2026-07", "tipo": "sessao", "atividades": 1836, "participantes": 45}, {"mes": "2026-08", "tipo": "dever", "atividades": 347, "participantes": 174}, {"mes": "2026-08", "tipo": "logika", "atividades": 828, "participantes": 207}, {"mes": "2026-08", "tipo": "sessao", "atividades": 307, "participantes": 16}, {"mes": "2026-09", "tipo": "dever", "atividades": 262, "participantes": 190}, {"mes": "2026-09", "tipo": "logika", "atividades": 621, "participantes": 207}, {"mes": "2026-09", "tipo": "sessao", "atividades": 63, "participantes": 20}, {"mes": "2026-10", "tipo": "dever", "atividades": 338, "participantes": 195}, {"mes": "2026-10", "tipo": "logika", "atividades": 414, "participantes": 207}, {"mes": "2026-10", "tipo": "sessao", "atividades": 57, "participantes": 25}, {"mes": "2026-11", "tipo": "dever", "atividades": 281, "participantes": 183}, {"mes": "2026-11", "tipo": "logika", "atividades": 414, "participantes": 207}, {"mes": "2026-11", "tipo": "sessao", "atividades": 12, "participantes": 6}], "mensal_total": [{"mes": "2026-04", "atividades": 821, "participantes": 207}, {"mes": "2026-05", "atividades": 1080, "participantes": 237}, {"mes": "2026-06", "atividades": 526, "participantes": 224}, {"mes": "2026-07", "atividades": 2046, "participantes": 252}, {"mes": "2026-08", "atividades": 1482, "participantes": 397}, {"mes": "2026-09", "atividades": 946, "participantes": 417}, {"mes": "2026-10", "atividades": 809, "participantes": 427}, {"mes": "2026-11", "atividades": 707, "participantes": 396}], "acerto": [{"tipo": "dever", "atividades_com_tentativa": 87, "taxa_acerto": 100.0}, {"tipo": "logika", "atividades_com_tentativa": 4309, "taxa_acerto": 10.2}, {"tipo": "sessao", "atividades_com_tentativa": 2237, "taxa_acerto": 86.0}], "jogos": [{"jogo": "6af962c7-09be-424c-8f0e-22f911e410b9", "sessoes": 730, "minutos_medios": 1.2, "taxa_acerto": 99.7}, {"jogo": "69b168f5-cf7f-4dac-8b0e-395f6e89f1d9", "sessoes": 399, "minutos_medios": 9.7, "taxa_acerto": 94.2}, {"jogo": "0c2d9a71-d298-4ee2-9dbb-ed7b51759f86", "sessoes": 240, "minutos_medios": null, "taxa_acerto": 94.5}, {"jogo": "43775cfb-0250-48ac-b5af-20db1730571c", "sessoes": 162, "minutos_medios": 0.2, "taxa_acerto": 86.6}, {"jogo": "d44b83fd-7c5f-4dc0-ab91-453f5031645f", "sessoes": 128, "minutos_medios": 5.9, "taxa_acerto": 94.8}, {"jogo": "d72dabee-94c1-4de0-a923-00e95a867076", "sessoes": 92, "minutos_medios": 3.9, "taxa_acerto": 100.0}, {"jogo": "6afc83c3-0498-4be9-ba72-a8ed988e4704", "sessoes": 58, "minutos_medios": null, "taxa_acerto": 50.0}, {"jogo": "9e896695-5656-422c-9111-d7d2288e2384", "sessoes": 54, "minutos_medios": null, "taxa_acerto": 100.0}], "semana": [{"dia_semana": 1, "atividades": 1660}, {"dia_semana": 2, "atividades": 1387}, {"dia_semana": 3, "atividades": 2007}, {"dia_semana": 4, "atividades": 1030}, {"dia_semana": 5, "atividades": 978}, {"dia_semana": 6, "atividades": 533}, {"dia_semana": 7, "atividades": 822}]}</script>
+<script>
+(function () {
+  var D = JSON.parse(document.getElementById('dados').textContent);
+  var NS = 'http://www.w3.org/2000/svg';
+  var COR = { sessao:'var(--c1)', dever:'var(--c2)', logika:'var(--c3)', trabalho:'var(--c4)' };
+  var NOME = { sessao:'Sessões de jogo', dever:'Deveres', logika:'Lógika', trabalho:'Trabalhos' };
+  var DIAS = ['', 'Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+  var fmt = function (n) { return Number(n).toLocaleString('pt-BR'); };
+  var mesLabel = function (m) { var p = m.split('-'); return ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'][+p[1]-1] + '/' + p[0].slice(2); };
+  var dataBR = function (s) { var p = String(s).split('-'); return p[2] + '/' + p[1] + '/' + p[0]; };
+  function el(tag, attrs, txt) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (txt != null) e.textContent = txt; return e; }
+  function svg(w, h, label) { var s = el('svg', { viewBox:'0 0 ' + w + ' ' + h, role:'img', 'aria-label':label }); return s; }
+  function bars(host, rows, opt) {
+    var W = 520, H = 220, L = 44, B = 28, T = 10, R = 8;
+    var s = svg(W, H, opt.label), max = Math.max.apply(null, rows.map(function (r) { return r.total; })) || 1;
+    var bw = (W - L - R) / rows.length;
+    [0, 0.5, 1].forEach(function (f) {
+      var y = T + (H - T - B) * (1 - f);
+      s.appendChild(el('line', { x1:L, x2:W - R, y1:y, y2:y, stroke:'var(--bd)' }));
+      s.appendChild(el('text', { x:L - 6, y:y + 4, 'text-anchor':'end' }, fmt(Math.round(max * f))));
+    });
+    rows.forEach(function (r, i) {
+      var x = L + i * bw + bw * 0.15, w = bw * 0.7, acc = 0;
+      r.parts.forEach(function (p) {
+        var h = (H - T - B) * (p.v / max), y = T + (H - T - B) - acc - h; acc += h;
+        var rect = el('rect', { x:x, y:y, width:w, height:Math.max(h, 0), fill:p.c, rx:2 });
+        rect.appendChild(el('title', {}, r.label + ' — ' + p.n + ': ' + fmt(p.v)));
+        s.appendChild(rect);
+      });
+      s.appendChild(el('text', { x:x + w / 2, y:H - 10, 'text-anchor':'middle' }, r.label));
+    });
+    host.appendChild(s);
+  }
+  var R = D.resumo, tot = {}, meses = D.mensal_total;
+  // cabeçalho e KPIs
+  document.getElementById('sub').textContent = 'Período ' + dataBR(R.inicio) + ' a ' + dataBR(R.fim);
+  document.getElementById('gen').textContent = D.gerado_em;
+  var ac = {}; D.acerto.forEach(function (a) { ac[a.tipo] = a; });
+  var sessoes = D.mensal.filter(function (m) { return m.tipo === 'sessao'; }).reduce(function (s, m) { return s + m.atividades; }, 0);
+  [[fmt(R.atividades), 'atividades registradas'], [fmt(R.participantes), 'participantes distintos'],
+   [fmt(sessoes), 'sessões de jogo'], [(ac.sessao ? String(ac.sessao.taxa_acerto).replace('.', ',') : '—') + '%', 'acerto nas sessões']].forEach(function (k) {
+    var d = document.createElement('div'); d.className = 'card kpi'; d.innerHTML = '<b></b><span></span>';
+    d.firstChild.textContent = k[0]; d.lastChild.textContent = k[1]; document.getElementById('kpis').appendChild(d);
+  });
+  // mensal empilhado
+  var tipos = []; D.mensal.forEach(function (m) { if (tipos.indexOf(m.tipo) < 0) tipos.push(m.tipo); });
+  var rows = meses.map(function (m) {
+    var parts = tipos.map(function (t) {
+      var x = D.mensal.filter(function (y) { return y.mes === m.mes && y.tipo === t; })[0];
+      return { n:NOME[t] || t, v:x ? x.atividades : 0, c:COR[t] || 'var(--mut)' };
+    });
+    return { label:mesLabel(m.mes), total:m.atividades, parts:parts };
+  });
+  bars(document.getElementById('c-mensal'), rows, { label:'Atividades por mês e tipo' });
+  document.getElementById('l-mensal').innerHTML = tipos.map(function (t) { return '<span><i style="background:' + (COR[t] || 'var(--mut)') + '"></i>' + (NOME[t] || t) + '</span>'; }).join('');
+  bars(document.getElementById('c-part'), meses.map(function (m) { return { label:mesLabel(m.mes), total:m.participantes, parts:[{ n:'Participantes', v:m.participantes, c:'var(--c1)' }] }; }), { label:'Participantes ativos por mês' });
+  bars(document.getElementById('c-acerto'), D.acerto.map(function (a) { return { label:NOME[a.tipo] || a.tipo, total:100, parts:[{ n:'Acerto %', v:Number(a.taxa_acerto) || 0, c:COR[a.tipo] || 'var(--mut)' }] }; }), { label:'Taxa de acerto por tipo' });
+  bars(document.getElementById('c-semana'), D.semana.map(function (d) { return { label:DIAS[d.dia_semana], total:d.atividades, parts:[{ n:'Atividades', v:d.atividades, c:'var(--c2)' }] }; }), { label:'Atividades por dia da semana' });
+  // tabela de jogos
+  var t = '<table><thead><tr><th>Jogo</th><th class="n">Sessões</th><th class="n">Tempo médio (min)</th><th class="n">Acerto %</th></tr></thead><tbody>';
+  D.jogos.forEach(function (j) { t += '<tr><td></td><td class="n">' + fmt(j.sessoes) + '</td><td class="n">' + (j.minutos_medios == null ? '—' : String(j.minutos_medios).replace('.', ',')) + '</td><td class="n">' + (j.taxa_acerto == null ? '—' : String(j.taxa_acerto).replace('.', ',')) + '</td></tr>'; });
+  document.getElementById('t-jogos').innerHTML = t + '</tbody></table>';
+  Array.prototype.forEach.call(document.querySelectorAll('#t-jogos tbody tr'), function (tr, i) { tr.firstChild.textContent = 'jogo ' + String(D.jogos[i].jogo).slice(0, 8); });
+  // leituras automáticas
+  var ins = [], pico = meses.slice().sort(function (a, b) { return b.atividades - a.atividades; })[0];
+  ins.push('Mês de maior movimento: ' + mesLabel(pico.mes) + ', com ' + fmt(pico.atividades) + ' atividades e ' + fmt(pico.participantes) + ' participantes ativos.');
+  var dp = D.semana.slice().sort(function (a, b) { return b.atividades - a.atividades; })[0];
+  ins.push('Dia da semana mais ativo: ' + DIAS[dp.dia_semana] + ' (' + fmt(dp.atividades) + ' atividades).');
+  var ult = meses[meses.length - 1];
+  ins.push('O último mês no retrato (' + mesLabel(ult.mes) + ') é parcial: ' + fmt(ult.atividades) + ' atividades até ' + dataBR(R.fim) + '. Não compare com mês fechado.');
+  ins.push('Taxa de acerto: ' + D.acerto.map(function (a) { return (NOME[a.tipo] || a.tipo) + ' ' + String(a.taxa_acerto).replace('.', ',') + '%'; }).join(' · ') + '. Cada tipo mede acerto de um jeito; compare um tipo só com ele mesmo ao longo do tempo.');
+  document.getElementById('ins').innerHTML = ins.map(function () { return '<li></li>'; }).join('');
+  Array.prototype.forEach.call(document.querySelectorAll('#ins li'), function (li, i) { li.textContent = ins[i]; });
+})();
+</script>
+</body>
+</html>
