@@ -1,0 +1,30 @@
+// Medidas do modelo semantico "Plataforma Viva - Modelo" (Fabric, Direct Lake).
+// Janelas por FILTER/ALL: nao exigem tabela de datas.
+// Nome da medida nao pode repetir o de uma coluna (DAX ignora maiusculas): por isso "Total eventos".
+
+// gold_operacao_diaria
+Total eventos = SUM ( gold_operacao_diaria[eventos] )
+
+Eventos YTD =
+VAR d = MAX ( gold_operacao_diaria[dt] )
+RETURN CALCULATE ( [Total eventos],
+    FILTER ( ALL ( gold_operacao_diaria[dt] ), YEAR ( gold_operacao_diaria[dt] ) = YEAR ( d ) && gold_operacao_diaria[dt] <= d ) )
+
+Eventos 30d =
+VAR d = MAX ( gold_operacao_diaria[dt] )
+RETURN CALCULATE ( [Total eventos],
+    FILTER ( ALL ( gold_operacao_diaria[dt] ), gold_operacao_diaria[dt] > d - 30 && gold_operacao_diaria[dt] <= d ) )
+
+Eventos 30d anteriores =
+VAR d = MAX ( gold_operacao_diaria[dt] )
+RETURN CALCULATE ( [Total eventos],
+    FILTER ( ALL ( gold_operacao_diaria[dt] ), gold_operacao_diaria[dt] > d - 60 && gold_operacao_diaria[dt] <= d - 30 ) )
+
+Variacao 30d % = DIVIDE ( [Eventos 30d] - [Eventos 30d anteriores], [Eventos 30d anteriores] )
+
+Participacao por origem % = DIVIDE ( [Total eventos], CALCULATE ( [Total eventos], ALL ( gold_operacao_diaria[origem] ) ) )
+
+// gold_radar_demanda
+Cobertura media % = AVERAGE ( gold_radar_demanda[pct_vagas] )
+
+Ranking tecnologia = RANKX ( ALL ( gold_radar_demanda[tecnologia] ), [Cobertura media %] )

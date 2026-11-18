@@ -21,3 +21,13 @@ Os CSV ficam em `https://codall.site/plataforma/gold/` e sao regerados todo dia 
 - Colunas empilhadas: `eventos` por dia e `projeto` (operacao dos produtos).
 
 O arquivo .pbix nao e versionado (binario, pode embutir cache de dados). Este diretorio guarda tudo que o recria: consultas M e medidas DAX.
+
+
+## Caminho C: Microsoft Fabric (Dataflow Gen2 + Lakehouse + Direct Lake)
+Roda sem Power BI Desktop, tudo no navegador (workspace de teste Fabric, 60 dias).
+1. Dataflow Gen2 `df_gold_csv` com as consultas de `fabric/operacao_auditoria.pq` e `fabric/radar_auditoria.pq` (CSV publico, tipos explicitos, coluna de auditoria `carga_em`).
+2. Destino: Lakehouse `lh_plataforma_viva`, metodo Substituir; atualizacao diaria agendada.
+3. Modelo semantico em Direct Lake sobre as duas tabelas, com as medidas de `fabric/medidas_fabric.dax`.
+4. Relatorio de 2 paginas (resumo da operacao e cobertura media por tecnologia).
+
+Limites: o link do relatorio e privado do workspace (sem link publico) e o teste do Fabric expira; os artefatos do Fabric nao sao versionados, so as consultas e medidas acima.
