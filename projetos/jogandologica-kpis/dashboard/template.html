@@ -113,7 +113,7 @@
   var t = '<table><thead><tr><th>Jogo</th><th class="n">Sessões</th><th class="n">Tempo médio (min)</th><th class="n">Acerto %</th></tr></thead><tbody>';
   D.jogos.forEach(function (j) { t += '<tr><td></td><td class="n">' + fmt(j.sessoes) + '</td><td class="n">' + (j.minutos_medios == null ? '—' : String(j.minutos_medios).replace('.', ',')) + '</td><td class="n">' + (j.taxa_acerto == null ? '—' : String(j.taxa_acerto).replace('.', ',')) + '</td></tr>'; });
   document.getElementById('t-jogos').innerHTML = t + '</tbody></table>';
-  Array.prototype.forEach.call(document.querySelectorAll('#t-jogos tbody tr'), function (tr, i) { tr.firstChild.textContent = D.jogos[i].jogo; });
+  Array.prototype.forEach.call(document.querySelectorAll('#t-jogos tbody tr'), function (tr, i) { tr.firstChild.textContent = 'jogo ' + String(D.jogos[i].jogo).slice(0, 8); });
   // leituras automáticas
   var ins = [], pico = meses.slice().sort(function (a, b) { return b.atividades - a.atividades; })[0];
   ins.push('Mês de maior movimento: ' + mesLabel(pico.mes) + ', com ' + fmt(pico.atividades) + ' atividades e ' + fmt(pico.participantes) + ' participantes ativos.');
@@ -121,8 +121,7 @@
   ins.push('Dia da semana mais ativo: ' + DIAS[dp.dia_semana] + ' (' + fmt(dp.atividades) + ' atividades).');
   var ult = meses[meses.length - 1];
   ins.push('O último mês no retrato (' + mesLabel(ult.mes) + ') é parcial: ' + fmt(ult.atividades) + ' atividades até ' + dataBR(R.fim) + '. Não compare com mês fechado.');
-  var melhor = D.acerto.slice().sort(function (a, b) { return b.taxa_acerto - a.taxa_acerto; })[0], pior = D.acerto.slice().sort(function (a, b) { return a.taxa_acerto - b.taxa_acerto; })[0];
-  if (melhor && pior && melhor.tipo !== pior.tipo) ins.push('Maior taxa de acerto: ' + (NOME[melhor.tipo] || melhor.tipo) + ' (' + melhor.taxa_acerto + '%). Menor: ' + (NOME[pior.tipo] || pior.tipo) + ' (' + pior.taxa_acerto + '%).');
+  ins.push('Taxa de acerto: ' + D.acerto.map(function (a) { return (NOME[a.tipo] || a.tipo) + ' ' + String(a.taxa_acerto).replace('.', ',') + '%'; }).join(' · ') + '. Cada tipo mede acerto de um jeito; compare um tipo só com ele mesmo ao longo do tempo.');
   document.getElementById('ins').innerHTML = ins.map(function () { return '<li></li>'; }).join('');
   Array.prototype.forEach.call(document.querySelectorAll('#ins li'), function (li, i) { li.textContent = ins[i]; });
 })();

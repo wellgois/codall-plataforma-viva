@@ -32,6 +32,8 @@ bi_fato_atividade (Postgres)  ->  sql/kpis.sql  ->  dashboard/kpis.json
 - É um **retrato estático**: os números valem para o momento de `gerado_em`. Para atualizar, rode `scripts/gerar_dashboard.sh` de novo.
 - O último mês do período é **parcial**; não compare com mês fechado.
 - Cobre só o JogandoLógica. Os dados do euprofessor (APIA) ficam para uma próxima versão, porque estão em outro esquema e pedem outra camada de views.
+- **A taxa de acerto não é comparável entre tipos.** Na base atual, Deveres aparece com 100% sobre poucas atividades (87) e Lógika com cerca de 10%, o que indica definições diferentes de "acerto" por tipo, não desempenho pior. Por isso o dashboard não ranqueia tipos por acerto.
+- Os jogos aparecem com os 8 primeiros caracteres do identificador, porque a base guarda UUID e não o nome do jogo; vários jogos não têm tempo registrado (aparece "—").
 - Cada tipo de atividade tem uma qualidade de dado diferente (por exemplo, "lógika" identifica equipes, não alunos), então "participantes distintos" soma alunos e equipes.
 
 ## Como reproduzir
