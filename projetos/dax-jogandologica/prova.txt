@@ -1,0 +1,23 @@
+ total_atividades | alunos | jogos | total_pontos | acertos | tentativas | taxa_acerto | minutos_totais | data_min | data_max 
+------------------+--------+-------+--------------+---------+------------+-------------+----------------+----------+----------
+             8418 |    513 |   115 |      5182900 |   26620 |      66937 |      0.3977 |        8593.72 | 20260427 | 20261119
+(1 row)
+
+ tipo_atividade | qtd  | pontos  
+----------------+------+---------
+ logika         | 4309 |  508278
+ sessao         | 2881 | 4611418
+ dever          | 1228 |   63204
+(3 rows)
+
+    status    | count 
+--------------+-------
+ finalizado   |  2552
+ em_andamento |  1794
+ expirada     |  1431
+ pendente     |  1136
+ encerrada    |   754
+ cancelada    |   659
+ encerrado    |    92
+(7 rows)
+
