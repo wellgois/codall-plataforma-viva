@@ -79,3 +79,13 @@ Este repositorio nunca contem dado pessoal nem segredo. Dados de alunos e de pag
 Wellington Gois - Engenheiro de Dados - [LinkedIn](https://linkedin.com/in/wellingtongois)
 
 Licenca MIT.
+
+## Ingestao SQL Server (`ingestao/sqlserver/carga_sqlserver.py`)
+
+- Fonte: `/opt/warehouse/plataforma.duckdb` -> SQL Server `pv_mssql,1433/pv_analytics`.
+- Credencial: lida do arquivo `.mssql.env` em `/opt/ingestao/` (bind-mount ro do host `/opt/plataforma-viva/ingestao/.mssql.env`).
+- Relatorio de comparacao (default a partir de 2026-11-23): `/opt/warehouse/comparativo.json` (antes apontava para caminho interno nao gravavel pelo usuario `airflow`, gerando `PermissionError`).
+- Execucao de referencia — DAG `plataforma_viva_diaria` run `manual__auto_20261123_130515` em 2026-11-23T13:05:36Z:
+  - `gold_operacao_diaria`: duckdb=65, sqlserver=65, duplicadas_por_chave=0, ok=true
+  - `gold_radar_demanda`:   duckdb=352, sqlserver=352, duplicadas_por_chave=0, ok=true
+- 3 tasks (`validar_contratos`, `dbt_build`, `carga_sqlserver`) concluidas com `success`.

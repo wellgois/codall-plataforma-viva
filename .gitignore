@@ -34,3 +34,12 @@ projetos/**/*.xlsx
 projetos/**/*.xls
 projetos/**/*.csv
 *.bak*
+
+# segredos e artefatos locais
+*.env
+.mssql_env
+.salt
+**/__pycache__/
+.terraform.lock.hcl
+**/data-exports-governanca/results/
+infra/.mssql.env

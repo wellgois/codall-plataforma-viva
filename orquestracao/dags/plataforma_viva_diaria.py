@@ -21,4 +21,13 @@ with DAG(
         task_id="dbt_build",
         bash_command="cd /opt/transformacao && dbt build --exclude tag:stream --profiles-dir . --target-path /tmp/dbt-target --log-path /tmp/dbt-logs",
     )
-    contratos >> dbt
+    carga_sqlserver = BashOperator(
+        task_id="carga_sqlserver",
+        bash_command=(
+            "MSSQL_HOST=pv_mssql MSSQL_PORT=1433 MSSQL_DB=pv_analytics MSSQL_USER=sa "
+            "MSSQL_PASSWORD=\"$(grep ^MSSQL_SA_PASSWORD= /opt/ingestao/.mssql.env | cut -d= -f2-)\" "
+            "COMPARATIVO_OUT=/opt/warehouse/comparativo.json "
+            "python /opt/ingestao/sqlserver/carga_sqlserver.py"
+        ),
+    )
+    contratos >> dbt >> carga_sqlserver
