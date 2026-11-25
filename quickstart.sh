@@ -54,7 +54,7 @@ docker compose exec -T airflow-scheduler airflow dags unpause plataforma_viva_di
 docker compose exec -T airflow-scheduler airflow dags trigger plataforma_viva_diaria >/dev/null 2>&1
 log "DAG disparada; aguardando o resultado (validar contratos -> dbt build)"
 ESTADO=""
-for i in $(seq 1 60); do
+for i in $(seq 1 180); do
   SAIDA=$(docker compose exec -T airflow-scheduler airflow dags list-runs -d plataforma_viva_diaria -o json 2>/dev/null || true)
   if echo "$SAIDA" | grep -q '"state": "success"'; then ESTADO=success; break; fi
   if echo "$SAIDA" | grep -q '"state": "failed"'; then ESTADO=failed; break; fi
