@@ -90,7 +90,7 @@ a{color:var(--ac)}
 <div class="c"><b>Aplica&ccedil;&atilde;o</b><span>Node.js em um processo gerenciado pelo pm2, com sess&otilde;es em SQLite e o terminal ligado a uma sess&atilde;o tmux que sobrevive a quedas de conex&atilde;o.</span></div>
 <div class="c"><b>IA</b><span>Modelo DeepSeek, escolhido pelo custo baixo, com um segundo agente revisor antes de concluir tarefas.</span></div>
 <div class="c"><b>Seguran&ccedil;a</b><span>Cofre de chaves com mascaramento na sa&iacute;da, trava contra vazamento de segredos e um port&atilde;o para reinicializa&ccedil;&otilde;es, com checagem pr&eacute;via, revis&atilde;o e teste de fuma&ccedil;a.</span></div>
-<div class="c"><b>Dados</b><span>Lakehouse com Airflow, dbt, DuckDB e Redpanda alimentado pelos produtos reais. O Spark confere os resultados do dbt e o Terraform sobe a mesma infraestrutura na AWS e na Azure.</span></div>
+<div class="c"><b>Dados</b><span>Lakehouse com Airflow, dbt, DuckDB e Redpanda alimentado pelos produtos reais. O Spark confere os resultados do dbt <em>(prova parcial: roda s&oacute; local, equival&ecirc;ncia documentada na ADR 0008)</em> e o Terraform sobe a mesma infraestrutura na AWS e na Azure.</span></div>
 </div>
 </section>
 
@@ -124,19 +124,19 @@ a{color:var(--ac)}
 
 <section>
 <h2>Estado do projeto</h2>
-<p class="l">Constru&iacute;do em p&uacute;blico e por fases. Cada fase s&oacute; fecha quando passa no teste de aceite. Nada abaixo &eacute; marcado como pronto antes disso. Atualizado em 11/11/2026.</p>
+<p class="l">Constru&iacute;do em p&uacute;blico e por fases. Cada fase s&oacute; fecha quando passa no teste de aceite. Nada abaixo &eacute; marcado como pronto antes disso. Atualizado em 25/11/2026.</p>
 <table>
 <tr><th>Fase</th><th>Entrega</th><th>Status</th></tr>
 <tr><td>0</td><td>Base: capacidade medida, reposit&oacute;rio p&uacute;blico, CI</td><td><span class="st on">conclu&iacute;da</span></td></tr>
-<tr><td>1</td><td>Lakehouse com Airflow (bronze, silver, gold)</td><td><span class="st on">no ar &middot; aceite passou em 14/11 (4 execu&ccedil;&otilde;es di&aacute;rias seguidas, de 10 a 13/11)</span></td></tr>
-<tr><td>2</td><td>Confiabilidade p&uacute;blica: contratos, linhagem, postmortems</td><td><span class="st on">no ar &middot; <a href="/confiabilidade.html">ver ao vivo</a></span></td></tr>
-<tr><td>3</td><td>Streaming com Redpanda</td><td><span class="st on">no ar &middot; aceite passou em 11/11 (evento no gold em 72 s)</span></td></tr>
-<tr><td>4</td><td>Curr&iacute;culo verific&aacute;vel e radar do mercado de dados</td><td><span class="st on">no ar &middot; <a href="/radar.html">radar</a> &middot; <a href="/curriculo.html">curr&iacute;culo</a></span></td></tr>
-<tr><td>5</td><td>AWS com Terraform e teto de gasto; Power BI</td><td><span class="st on">AWS aplicada na conta real em 11/11 (11 recursos, 2 ciclos) &middot; Power BI sem painel publicado</span></td></tr>
-<tr><td>6</td><td>Lan&ccedil;amento: README PT/EN, v&iacute;deo</td><td><span class="st on">pronta &middot; quickstart em m&aacute;quina limpa: 98 s (limite 900 s)</span></td></tr>
-<tr><td>7</td><td>Spark: job PySpark conferido contra o dbt</td><td><span class="st">concluída</span></td></tr>
-<tr><td>8</td><td>Azure: mesmo Terraform em outra nuvem</td><td><span class="st">concluída</span></td></tr>
-<tr><td>9</td><td>GCP: BigQuery sandbox, mesmo Terraform</td><td><span class="st">conclu&iacute;da</span></td></tr>
+<tr><td>1</td><td>Lakehouse com Airflow (bronze&rarr;silver&rarr;gold) em dbt + DuckDB</td><td><span class="st on">conclu&iacute;da</span></td></tr>
+<tr><td>2</td><td>Streaming real (Redpanda/Kafka) com idempot&ecirc;ncia</td><td><span class="st on">conclu&iacute;da</span></td></tr>
+<tr><td>3</td><td>Monitor, postmortem e radar de mercado ao vivo</td><td><span class="st on">conclu&iacute;da</span></td></tr>
+<tr><td>4</td><td>Produtos reais alimentando o lakehouse (5 no ar)</td><td><span class="st on">conclu&iacute;da</span></td></tr>
+<tr><td>5</td><td>AWS: Terraform (S3, Glue, Athena, Budgets) &mdash; 11 recursos reais, 2 ciclos; Power BI publicado sem painel</td><td><span class="st wip">parcial</span></td></tr>
+<tr><td>6</td><td>CI completo (segredos, higiene, privacidade, Terraform, quickstart)</td><td><span class="st on">conclu&iacute;da</span></td></tr>
+<tr><td>7</td><td>Documenta&ccedil;&atilde;o verific&aacute;vel (ADR, postmortems, dbt docs)</td><td><span class="st on">conclu&iacute;da</span></td></tr>
+<tr><td>8</td><td>Azure: Terraform em assinatura real, 8 recursos, 2 ciclos; carga no Azurite (emulador); armazenamento real pendente</td><td><span class="st wip">parcial</span></td></tr>
+<tr><td>9</td><td>GCP/BigQuery sandbox: Terraform + carga do gold, 2 ciclos reais; sem Cloud Storage</td><td><span class="st wip">parcial</span></td></tr>
 </table>
 </section>
 
@@ -146,7 +146,7 @@ a{color:var(--ac)}
 <div class="bar"><span class="n">SQL</span><span class="t"><i style="width:100%"></i></span><span class="v">26</span></div>
 <div class="bar"><span class="n">Python</span><span class="t"><i style="width:92%"></i></span><span class="v">24</span></div>
 <div class="bar"><span class="n">CI/CD</span><span class="t"><i style="width:85%"></i></span><span class="v">22</span></div>
-<div class="bar"><span class="n">Spark</span><span class="t"><i style="width:81%"></i></span><span class="v">21</span></div>
+<div class="bar"><span class="n">Spark (parcial)</span><span class="t"><i style="width:81%"></i></span><span class="v">21*</span></div>
 <div class="bar"><span class="n">Governan&ccedil;a</span><span class="t"><i style="width:81%"></i></span><span class="v">21</span></div>
 <div class="bar"><span class="n">Qualidade</span><span class="t"><i style="width:73%"></i></span><span class="v">19</span></div>
 <div class="bar"><span class="n">Lakehouse</span><span class="t"><i style="width:58%"></i></span><span class="v">15</span></div>

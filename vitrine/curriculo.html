@@ -43,6 +43,8 @@ a{color:var(--ac)}
 <header>
 <img class="foto" src="/perfil.jpg" alt="Wellington Gois" width="104" height="104">
 <div class="tag">Wellington Gois</div>
+<p class="l"><small>Atualizado em 25/11/2026 &middot; cada habilidade tem uma prova confer&iacute;vel</small></p>
+
 <h1>Curr&iacute;culo verific&aacute;vel.</h1>
 <p class="l">Engenheiro de Dados e professor de Matem&aacute;tica, no Rio de Janeiro. Aqui cada habilidade vem com a prova: c&oacute;digo, teste ou n&uacute;mero ao vivo que voc&ecirc; pode conferir sozinho.</p>
 <a class="btn p" href="https://linkedin.com/in/wellingtongois">LinkedIn</a><a class="btn" href="https://github.com/wellgois/codall-plataforma-viva">GitHub</a><a class="btn" href="/">Plataforma Viva</a><a class="btn" href="/radar.html#cole">Teste com a sua vaga</a>
@@ -66,6 +68,12 @@ a{color:var(--ac)}
 <tr><td>Confiabilidade e resposta a incidentes</td><td><a href="https://github.com/wellgois/codall-plataforma-viva/tree/main/docs/postmortems">postmortems sem culpados</a> e falha injetada detectada em ciclo de 5 min</td></tr>
 <tr><td>Privacidade e LGPD por constru&ccedil;&atilde;o</td><td>agrega&ccedil;&atilde;o na origem, k-anonimato e <a href="https://github.com/wellgois/codall-plataforma-viva/blob/main/confiabilidade/auditoria_privacidade.py">auditoria autom&aacute;tica</a> antes de publicar</td></tr>
 <tr><td>Opera&ccedil;&atilde;o de produtos reais</td><td>cinco produtos no ar alimentam o lakehouse (veja a <a href="/">landing</a>)</td></tr>
+<tr><td>AWS (S3, Glue, Athena, Budgets)</td><td><a href="https://github.com/wellgois/codall-plataforma-viva/tree/main/infra/terraform">Terraform AWS</a> e <a href="https://github.com/wellgois/codall-plataforma-viva/blob/main/nuvem/publicar_nuvem.py">script de publica&ccedil;&atilde;o</a>: 11 recursos em dois ciclos reais</td></tr>
+<tr><td>Azure (Storage, Terraform)</td><td><a href="https://github.com/wellgois/codall-plataforma-viva/tree/main/infra/terraform-azure">Terraform Azure</a> (8 recursos, 2 ciclos em assinatura real) e <a href="https://github.com/wellgois/codall-plataforma-viva/blob/main/nuvem/publicar_azure.py">publicar_azure.py</a> com Azurite</td></tr>
+<tr><td>GCP / BigQuery</td><td><a href="https://github.com/wellgois/codall-plataforma-viva/tree/main/infra/terraform-gcp">Terraform GCP</a> (dataset em sandbox) e <a href="https://github.com/wellgois/codall-plataforma-viva/blob/main/nuvem/publicar_gcp.py">publicar_gcp.py</a> carregando o gold real</td></tr>
+<tr><td>PySpark</td><td><b>prova parcial</b> &mdash; roda s&oacute; local como prova de equival&ecirc;ncia com o dbt (<a href="https://github.com/wellgois/codall-plataforma-viva/blob/main/docs/decisoes/0008-spark-conferido-contra-dbt.md">ADR 0008</a>); script em <a href="https://github.com/wellgois/codall-plataforma-viva/tree/main/spark">spark/gold_radar_demanda.py</a></td></tr>
+<tr><td>Python de dados</td><td><a href="https://github.com/wellgois/codall-plataforma-viva/tree/main/ingestao">ingest&atilde;o</a>, <a href="https://github.com/wellgois/codall-plataforma-viva/tree/main/nuvem">publica&ccedil;&atilde;o em 3 nuvens</a> e todo o c&oacute;digo de automa&ccedil;&atilde;o do site</td></tr>
+<tr><td>SQL anal&iacute;tico</td><td><a href="https://github.com/wellgois/codall-plataforma-viva/tree/main/transformacao">modelos dbt</a>, views Athena e queries no BigQuery &mdash; os mesmos n&uacute;meros servem ao radar ao vivo</td></tr>
 <tr><td>Custo sob controle</td><td><a href="https://github.com/wellgois/codall-plataforma-viva/blob/main/docs/capacidade-vps.md">capacidade da VPS medida</a> e teto de gasto na nuvem</td></tr>
 </table>
 <p class="mut">Nada aqui &eacute; autodeclarado sem link. Se um link quebrar, o item deve ser considerado n&atilde;o comprovado.</p>

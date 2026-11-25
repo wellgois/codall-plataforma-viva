@@ -48,7 +48,7 @@ flowchart LR
 | Quality | dbt tests, YAML data contracts, privacy audit |
 | Reliability | monitor with Telegram alerts, postmortems, injected failure test |
 | Lineage | published dbt docs (model graph) |
-| Cloud and BI | Terraform (S3, Glue, Athena, Budgets) and Power BI |
+| Cloud and BI | Terraform provisioned on AWS (S3, Glue, Athena, Budgets), Azure (Storage) and GCP (BigQuery); Power BI published without dashboard |
 | CI | GitHub Actions: secrets, hygiene, privacy, Terraform, quickstart |
 
 Spark, Delta Lake and OpenLineage were considered and were **not** built: [ADR 0006](docs/decisoes/0006-escopo-real-da-stack.md).
@@ -61,7 +61,7 @@ Spark, Delta Lake and OpenLineage were considered and were **not** built: [ADR 0
 | 2. Reliability | injected failure detected and alerted | detected and recovered within a 5-minute cycle (Nov 11) |
 | 3. Streaming | event reaches gold within 2 min; replay does not duplicate | 72 s; resend and replay kept 1 row |
 | 4. Showcase | no personal data exposed | automatic audit in CI and before publishing |
-| 5. Cloud and BI | create and destroy is reproducible | 2 cycles of 9 resources on simulated AWS; Athena and Budgets only validated |
+| 5. Cloud and BI | create and destroy is reproducible | 2 cycles on AWS (11 resources), Azure (8) and GCP (BigQuery); Athena, Budgets and real Storage remain simulated |
 | 6. Launch | clone and run on a clean machine in under 15 min | measured by the quickstart workflow |
 
 ## Privacy

@@ -51,6 +51,14 @@ flowchart LR
 | Nuvem e BI | Terraform (S3, Glue, Athena, Budgets) e Power BI |
 | CI | GitHub Actions: segredos, higiene, privacidade, Terraform, quickstart |
 
+### Nuvens de verdade: AWS, Azure e GCP
+
+Tres experimentos reais, cada um com Terraform e script de publicacao:
+
+- **AWS** (Fase 5): `infra/terraform/` + `nuvem/publicar_nuvem.py` - 11 recursos (S3, Glue, Athena, Budgets), 2 ciclos.
+- **Azure** (Fase 8): `infra/terraform-azure/` + `nuvem/publicar_azure.py` - 8 recursos em assinatura real; carga no Azurite (emulador) provada, armazenamento real pendente - [ADR 0009](docs/decisoes/0009-azure-espelho-da-fase-5.md).
+- **GCP / BigQuery** (Fase 9): `infra/terraform-gcp/` + `nuvem/publicar_gcp.py` - dataset em sandbox, gold carregado, 2 ciclos. Sem Cloud Storage ainda.
+
 Delta Lake e OpenLineage foram considerados e **nao** foram construidos ([ADR 0006](docs/decisoes/0006-escopo-real-da-stack.md)). O Spark existe so em modo local, como prova de equivalencia contra o dbt, sem substituir o DuckDB ([ADR 0008](docs/decisoes/0008-spark-conferido-contra-dbt.md)).
 
 ## O que ja foi provado
