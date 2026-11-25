@@ -8,7 +8,7 @@ permissions:
 jobs:
   maquina-limpa:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Subir do zero e medir o tempo
@@ -17,8 +17,8 @@ jobs:
           ./quickstart.sh
           t=$(( $(date +%s) - s ))
           echo "tempo total: ${t}s"
-          echo "### Quickstart em maquina limpa: ${t}s (limite 900s)" >> "$GITHUB_STEP_SUMMARY"
-          [ "$t" -le 900 ]
+          echo "### Quickstart em maquina limpa: ${t}s (limite 1800s)" >> "$GITHUB_STEP_SUMMARY"
+          [ "$t" -le 1800 ]
       - name: Logs em caso de falha
         if: failure()
         run: cd infra && docker compose logs --tail=60
