@@ -53,7 +53,7 @@ done
 docker compose exec -T airflow-scheduler airflow dags unpause plataforma_viva_diaria >/dev/null 2>&1
 log "Disparando a DAG plataforma_viva_diaria e capturando o run_id"
 TRIGGER_JSON=$(docker compose exec -T airflow-scheduler airflow dags trigger plataforma_viva_diaria --output json 2>/dev/null || true)
-RUN_ID=$(printf '%s' "$TRIGGER_JSON" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("dag_run_id",""))' 2>/dev/null || true)
+RUN_ID=$(printf '%s' "$TRIGGER_JSON" | grep -oE '"dag_run_id": *"[^"]+"' | head -1 | sed -E 's/.*"([^"]+)"$/\1/')
 if [ -z "$RUN_ID" ]; then
   log "FALHOU: nao consegui obter run_id do trigger. Saida:"
   printf '%s\n' "$TRIGGER_JSON"
@@ -63,18 +63,7 @@ log "DAG disparada run_id=$RUN_ID; aguardando o resultado (validar contratos -> 
 ESTADO=""
 for i in $(seq 1 180); do
   SAIDA=$(docker compose exec -T airflow-scheduler airflow dags list-runs -d plataforma_viva_diaria -o json 2>/dev/null || true)
-  ESTE=$(printf '%s' "$SAIDA" | RUN_ID="$RUN_ID" python3 -c 'import sys,json,os
-try:
-    j=json.load(sys.stdin)
-except Exception:
-    j=[]
-rid=os.environ.get("RUN_ID")
-st=""
-for r in j:
-    if r.get("run_id")==rid:
-        st=r.get("state","")
-        break
-print(st)' 2>/dev/null || true)
+  ESTE=$(printf '%s' "$SAIDA" | tr '}' '\n' | grep -F "\"run_id\": \"$RUN_ID\"" | grep -oE '"state": *"[a-z]+"' | head -1 | sed -E 's/.*"([a-z]+)"$/\1/')
   case "$ESTE" in
     success) ESTADO=success; break;;
     failed)  ESTADO=failed;  break;;
